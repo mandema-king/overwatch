@@ -34,9 +34,6 @@ settings
 	{
 		Team 1
 		{
-			Ability Cooldown Time: 60%
-			Ammunition Clip Size Scalar: 400%
-
 			Bastion
 			{
 				Reconfigure: Off
