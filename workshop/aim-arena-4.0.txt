@@ -122,6 +122,24 @@ variables
 		18: Immortal
 }
 
+rule("GLOBAL initialize")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+	}
+
+	actions
+	{
+		Set Match Time(3599);
+	}
+}
+
 rule("Message")
 {
 	event
@@ -492,24 +510,6 @@ rule("RBOT W")
 		Start Throttle In Direction(Event Player, Forward, 1, To Player, Replace existing throttle, Direction and Magnitude);
 		Wait(3, Ignore Condition);
 		Stop Throttle In Direction(Event Player);
-	}
-}
-
-rule("GLOBAL initialize")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Game In Progress == True;
-	}
-
-	actions
-	{
-		Set Match Time(3599);
 	}
 }
 
