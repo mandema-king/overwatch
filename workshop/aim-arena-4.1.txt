@@ -60,7 +60,6 @@ variables
 
 	player:
 		8: ULT
-		18: Immortal
 }
 
 rule("Workshop Settings")
@@ -117,7 +116,6 @@ rule("PLAYER initialize")
 			Color(White), Color(White), String, Default Visibility);
 		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Left, 1, Color(
 			Team 1), Color(White), Color(White), String, Default Visibility);
-		Event Player.Immortal = False;
 		Event Player.ULT = False;
 	}
 }
@@ -276,7 +274,7 @@ rule("BOT says hello BM")
 	}
 }
 
-rule("PLAYER immortal on")
+rule("PLAYER toggle immortality")
 {
 	event
 	{
@@ -288,43 +286,17 @@ rule("PLAYER immortal on")
 	conditions
 	{
 		Is Alive(Event Player) == True;
-		Is Dummy Bot(Event Player) == False;
 		Is Communicating(Event Player, Need Healing) == True;
-		Event Player.Immortal == False;
 	}
 
 	actions
 	{
-		Big Message(Event Player, String("{0}: {1}", Custom String("Immortality"), String("On")));
-		Wait(2, Ignore Condition);
-		Set Status(Event Player, Event Player, Unkillable, 9999);
-		Event Player.Immortal = True;
-	}
-}
-
-rule("PLAYER immortal off")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		All;
-	}
-
-	conditions
-	{
-		Is Alive(Event Player) == True;
-		Is Dummy Bot(Event Player) == False;
-		Is Communicating(Event Player, Need Healing) == True;
-		Event Player.Immortal == True;
-	}
-
-	actions
-	{
-		Big Message(Event Player, String("{0}: {1}", Custom String("Immortality"), String("Off")));
-		Wait(2, Ignore Condition);
-		Clear Status(Event Player, Unkillable);
-		Event Player.Immortal = False;
+		If(Has Status(Event Player, Unkillable));
+			Clear Status(Event Player, Unkillable);
+			Big Message(Event Player, Custom String("Immortality: off"));
+		Else;
+			Set Status(Event Player, Null, Unkillable, 9999);
+			Big Message(Event Player, Custom String("Immortality: on"));
 	}
 }
 
