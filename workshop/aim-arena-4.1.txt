@@ -297,7 +297,7 @@ rule("PLAYER immortal on")
 	{
 		Big Message(Event Player, String("{0}: {1}", Custom String("Immortality"), String("On")));
 		Wait(2, Ignore Condition);
-		Set Status(Event Player, Event Player, Phased Out, 9999);
+		Set Status(Event Player, Event Player, Unkillable, 9999);
 		Event Player.Immortal = True;
 	}
 }
@@ -323,7 +323,7 @@ rule("PLAYER immortal off")
 	{
 		Big Message(Event Player, String("{0}: {1}", Custom String("Immortality"), String("Off")));
 		Wait(2, Ignore Condition);
-		Clear Status(Event Player, Phased Out);
+		Clear Status(Event Player, Unkillable);
 		Event Player.Immortal = False;
 	}
 }
