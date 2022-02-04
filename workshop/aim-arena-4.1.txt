@@ -62,6 +62,7 @@ variables
 
 	player:
 		0: hud_notification_text_ids
+		1: allowed_heroes
 }
 
 subroutines
@@ -149,6 +150,34 @@ rule("BOT create")
 		Create Dummy Bot(Hero(Ashe), Team 2, 3, Global.P[3], Global.T[1]);
 		Create Dummy Bot(Hero(Genji), Team 2, 4, Global.P[5], Vector(0, 0, 0));
 		Create Dummy Bot(Hero(Reinhardt), Team 2, 5, Global.P[0], Global.T[1]);
+	}
+}
+
+rule("BOT role lock")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Array Contains(All Damage Heroes, Hero Of(Event Player)));
+			Event Player.allowed_heroes = Filtered Array(All Damage Heroes, Array Contains(Allowed Heroes(Event Player),
+				Current Array Element));
+		Else If(Array Contains(All Support Heroes, Hero Of(Event Player)));
+			Event Player.allowed_heroes = Filtered Array(All Support Heroes, Array Contains(Allowed Heroes(Event Player),
+				Current Array Element));
+		Else;
+			Event Player.allowed_heroes = Filtered Array(All Tank Heroes, Array Contains(Allowed Heroes(Event Player), Current Array Element));
 	}
 }
 
@@ -475,7 +504,7 @@ rule("CASSIDY swap")
 	actions
 	{
 		Wait(2.400, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, All Heroes);
+		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
@@ -1024,7 +1053,7 @@ rule("ASHE swap")
 	actions
 	{
 		Wait(2.400, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, All Heroes);
+		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
@@ -1175,7 +1204,7 @@ rule("GENJI swap")
 	{
 		Stop Holding Button(Players In Slot(4, Team 2), Button(Secondary Fire));
 		Wait(2.400, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, All Heroes);
+		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 		Skip If(Hero Of(Event Player) == Hero(Genji), 1);
 		Stop Forcing Player To Be Hero(Event Player);
 	}
@@ -1318,7 +1347,7 @@ rule("REIN swap")
 	{
 		Wait(2.400, Ignore Condition);
 		Teleport(Event Player, Global.P[0]);
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(All Heroes));
+		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
