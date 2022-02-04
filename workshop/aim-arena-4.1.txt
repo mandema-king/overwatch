@@ -57,9 +57,6 @@ variables
 	global:
 		0: game_name
 		1: match_time
-
-	player:
-		8: ULT
 }
 
 rule("Workshop Settings")
@@ -116,7 +113,6 @@ rule("PLAYER initialize")
 			Color(White), Color(White), String, Default Visibility);
 		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Left, 1, Color(
 			Team 1), Color(White), Color(White), String, Default Visibility);
-		Event Player.ULT = False;
 	}
 }
 
