@@ -56,10 +56,24 @@ variables
 {
 	global:
 		0: game_name
+		1: match_time
 
 	player:
 		8: ULT
 		18: Immortal
+}
+
+rule("Workshop Settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
+	}
 }
 
 rule("GLOBAL initialize")
@@ -76,7 +90,7 @@ rule("GLOBAL initialize")
 
 	actions
 	{
-		Set Match Time(3599);
+		Set Match Time(Global.match_time * 60);
 		Global.game_name = Custom String("Aim Arena 4.1");
 	}
 }
