@@ -283,58 +283,6 @@ rule("BOT says hello BM")
 	}
 }
 
-rule("PLAYER toggle immortality")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		All;
-	}
-
-	conditions
-	{
-		Is Alive(Event Player) == True;
-		Is Communicating(Event Player, Need Healing) == True;
-	}
-
-	actions
-	{
-		If(Has Status(Event Player, Unkillable));
-			Clear Status(Event Player, Unkillable);
-			Big Message(Event Player, Custom String("Immortality: off"));
-			Create HUD Text(Event Player, Null, Null, Custom String("You are no longer immortal"), Left, Global.hud_notification_sort_order,
-				Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
-			Call Subroutine(AddLastHudTextIdToNotifications);
-		Else;
-			Set Status(Event Player, Null, Unkillable, 9999);
-			Big Message(Event Player, Custom String("Immortality: on"));
-			Create HUD Text(Event Player, Null, Null, Custom String("You are now immortal"), Left, Global.hud_notification_sort_order, Color(
-				White), Color(White), Color(White), Visible To and String, Default Visibility);
-			Call Subroutine(AddLastHudTextIdToNotifications);
-	}
-}
-
-rule("PLAYER leech 50% dmg done")
-{
-	event
-	{
-		Player Dealt Damage;
-		Team 1;
-		All;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == False;
-	}
-
-	actions
-	{
-		Heal(Event Player, Event Player, Event Damage / 2);
-	}
-}
-
 rule("RBOT E")
 {
 	event
@@ -1392,6 +1340,58 @@ rule("PLAYER self-kill (e.g. to switch hero)")
 	actions
 	{
 		Kill(Event Player, Null);
+	}
+}
+
+rule("PLAYER toggle immortality")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Is Alive(Event Player) == True;
+		Is Communicating(Event Player, Need Healing) == True;
+	}
+
+	actions
+	{
+		If(Has Status(Event Player, Unkillable));
+			Clear Status(Event Player, Unkillable);
+			Big Message(Event Player, Custom String("Immortality: off"));
+			Create HUD Text(Event Player, Null, Null, Custom String("You are no longer immortal"), Left, Global.hud_notification_sort_order,
+				Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+			Call Subroutine(AddLastHudTextIdToNotifications);
+		Else;
+			Set Status(Event Player, Null, Unkillable, 9999);
+			Big Message(Event Player, Custom String("Immortality: on"));
+			Create HUD Text(Event Player, Null, Null, Custom String("You are now immortal"), Left, Global.hud_notification_sort_order, Color(
+				White), Color(White), Color(White), Visible To and String, Default Visibility);
+			Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("PLAYER leech 50% dmg done")
+{
+	event
+	{
+		Player Dealt Damage;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == False;
+	}
+
+	actions
+	{
+		Heal(Event Player, Event Player, Event Damage / 2);
 	}
 }
 
