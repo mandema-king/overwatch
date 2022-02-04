@@ -1431,24 +1431,6 @@ rule("DOOM ult")
 	}
 }
 
-rule("Rule 76")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Game In Progress == True;
-	}
-
-	actions
-	{
-		Set Match Time(3599);
-	}
-}
-
 rule("Rule 55")
 {
 	event
