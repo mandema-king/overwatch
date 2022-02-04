@@ -57,6 +57,16 @@ variables
 	global:
 		0: game_name
 		1: match_time
+		2: clear_hud_notifications_interval
+		3: hud_notification_sort_order
+
+	player:
+		0: hud_notification_text_ids
+}
+
+subroutines
+{
+	0: AddLastHudTextIdToNotifications
 }
 
 rule("Workshop Settings")
@@ -69,6 +79,8 @@ rule("Workshop Settings")
 	actions
 	{
 		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
+		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("General"), Custom String(
+			"Clear HUD notification interval [seconds]"), 5, 5, 20, 1);
 	}
 }
 
@@ -88,6 +100,7 @@ rule("GLOBAL initialize")
 	{
 		Set Match Time(Global.match_time * 60);
 		Global.game_name = Custom String("Aim Arena 4.1");
+		Global.hud_notification_sort_order = 1000;
 	}
 }
 
@@ -290,9 +303,15 @@ rule("PLAYER toggle immortality")
 		If(Has Status(Event Player, Unkillable));
 			Clear Status(Event Player, Unkillable);
 			Big Message(Event Player, Custom String("Immortality: off"));
+			Create HUD Text(Event Player, Null, Null, Custom String("You are no longer immortal"), Left, Global.hud_notification_sort_order,
+				Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+			Call Subroutine(AddLastHudTextIdToNotifications);
 		Else;
 			Set Status(Event Player, Null, Unkillable, 9999);
 			Big Message(Event Player, Custom String("Immortality: on"));
+			Create HUD Text(Event Player, Null, Null, Custom String("You are now immortal"), Left, Global.hud_notification_sort_order, Color(
+				White), Color(White), Color(White), Visible To and String, Default Visibility);
+			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
 
@@ -1373,5 +1392,39 @@ rule("PLAYER self-kill (e.g. to switch hero)")
 	actions
 	{
 		Kill(Event Player, Null);
+	}
+}
+
+rule("Add last HUD Text ID to player notification array")
+{
+	event
+	{
+		Subroutine;
+		AddLastHudTextIdToNotifications;
+	}
+
+	actions
+	{
+		Modify Player Variable(Event Player, hud_notification_text_ids, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove HUD notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.hud_notification_text_ids));
+			Destroy HUD Text(Event Player.hud_notification_text_ids[0]);
+			Modify Player Variable(Event Player, hud_notification_text_ids, Remove From Array By Index, 0);
+		End;
+		Wait(Global.clear_hud_notifications_interval, Ignore Condition);
+		Loop;
 	}
 }
