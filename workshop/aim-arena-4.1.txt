@@ -32,30 +32,6 @@ settings
 
 	heroes
 	{
-		Team 1
-		{
-			Bastion
-			{
-				Reconfigure: Off
-			}
-
-			D.Va
-			{
-				Spawn Without Mech: On
-				Ultimate Ability Self-Destruct: Off
-			}
-
-			Junkrat
-			{
-				Ultimate Ability RIP-Tire: Off
-			}
-
-			Symmetra
-			{
-				Sentry Turret: Off
-			}
-		}
-
 		Team 2
 		{
 			Mercy
@@ -71,30 +47,6 @@ settings
 			disabled heroes
 			{
 				Echo
-			}
-		}
-
-		General
-		{
-			Ashe
-			{
-				Ultimate Ability B.O.B.: Off
-			}
-
-			Cassidy
-			{
-				Ultimate Ability Deadeye: Off
-			}
-
-			Soldier: 76
-			{
-				Ultimate Ability Tactical Visor: Off
-			}
-
-			Sombra
-			{
-				Hack: Off
-				Ultimate Ability EMP: Off
 			}
 		}
 	}
