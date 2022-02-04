@@ -457,7 +457,7 @@ rule("RBOT W")
 	}
 }
 
-rule("MCCREE strafe")
+rule("CASSIDY strafe")
 {
 	event
 	{
@@ -485,7 +485,7 @@ rule("MCCREE strafe")
 	}
 }
 
-disabled rule("MCCREE flash")
+disabled rule("CASSIDY flash")
 {
 	event
 	{
@@ -511,7 +511,7 @@ disabled rule("MCCREE flash")
 	}
 }
 
-rule("MCCREE roll")
+rule("CASSIDY roll")
 {
 	event
 	{
@@ -532,7 +532,7 @@ rule("MCCREE roll")
 	}
 }
 
-rule("MCCREE change")
+rule("CASSIDY change")
 {
 	event
 	{
@@ -553,7 +553,7 @@ rule("MCCREE change")
 	}
 }
 
-rule("MCCREE MOIRA dmg")
+rule("CASSIDY MOIRA dmg")
 {
 	event
 	{
@@ -578,7 +578,7 @@ rule("MCCREE MOIRA dmg")
 	}
 }
 
-rule("MCCREE BAPTISTE jump")
+rule("CASSIDY BAPTISTE jump")
 {
 	event
 	{
@@ -606,7 +606,7 @@ rule("MCCREE BAPTISTE jump")
 	}
 }
 
-rule("MCCREE SYMMETRA dmg")
+rule("CASSIDY SYMMETRA dmg")
 {
 	event
 	{
