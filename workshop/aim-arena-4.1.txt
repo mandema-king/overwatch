@@ -360,28 +360,6 @@ rule("RBOT strafe")
 	}
 }
 
-rule("REIN swap")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Slot 5;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(2.400, Ignore Condition);
-		Teleport(Event Player, Global.P[0]);
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(All Heroes));
-	}
-}
-
 rule("RBOT W")
 {
 	event
@@ -1319,6 +1297,28 @@ rule("DOOM ult")
 	actions
 	{
 		Press Button(Event Player, Button(Ultimate));
+	}
+}
+
+rule("REIN swap")
+{
+	event
+	{
+		Player Died;
+		Team 2;
+		Slot 5;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Wait(2.400, Ignore Condition);
+		Teleport(Event Player, Global.P[0]);
+		Start Forcing Player To Be Hero(Event Player, Random Value In Array(All Heroes));
 	}
 }
 
