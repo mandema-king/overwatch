@@ -77,7 +77,7 @@ rule("GLOBAL initialize")
 	}
 }
 
-rule("Message")
+rule("PLAYER initialize")
 {
 	event
 	{
