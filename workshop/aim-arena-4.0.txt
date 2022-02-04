@@ -495,7 +495,7 @@ rule("RBOT W")
 	}
 }
 
-rule("Rule 76")
+rule("GLOBAL initialize")
 {
 	event
 	{
@@ -1431,7 +1431,7 @@ rule("DOOM ult")
 	}
 }
 
-rule("Rule 55")
+rule("PLAYER self-kill (e.g. to switch hero)")
 {
 	event
 	{
