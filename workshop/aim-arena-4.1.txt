@@ -360,7 +360,7 @@ rule("RBOT strafe")
 	}
 }
 
-rule("RBOT change")
+rule("REIN change")
 {
 	event
 	{
