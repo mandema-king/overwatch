@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Aim practice vs dummy bots. Think fast when you spawn; Reapers love teleporting behind people; any other controls are in top left of screen"
+		Description: "Aim practice vs dummy bots. Think fast when you spawn; any other controls are in top left of screen"
 	}
 
 	lobby
@@ -26,7 +26,7 @@ settings
 		General
 		{
 			Hero Limit: Off
-			Respawn Time Scalar: 49%
+			Respawn Time Scalar: 63%
 		}
 	}
 
@@ -35,12 +35,7 @@ settings
 		Team 1
 		{
 			Ability Cooldown Time: 60%
-			Ammunition Clip Size Scalar: 400%
-
-			Bastion
-			{
-				Reconfigure: Off
-			}
+			Damage Received: 60%
 
 			D.Va
 			{
@@ -50,66 +45,164 @@ settings
 
 			Junkrat
 			{
+				No Ammunition Requirement: On
 				Ultimate Ability RIP-Tire: Off
 			}
 
 			Symmetra
 			{
 				Sentry Turret: Off
-			}
-
-			disabled heroes
-			{
-				Brigitte
-				Mei
-				Moira
-				Reinhardt
-				Roadhog
-				Torbjörn
-				Winston
-				Wrecking Ball
+				Ultimate Ability Photon Barrier: Off
 			}
 		}
 
 		Team 2
 		{
+			Junkrat
+			{
+				No Ammunition Requirement: On
+			}
+
 			Mercy
 			{
+				Resurrect Cooldown Time: 25%
 				Weapons Enabled: Caduceus Staff Only
 			}
 
-			Torbjörn
+			Symmetra
 			{
-				Deploy Turret: Off
+				Ultimate Ability Photon Barrier: Off
 			}
 		}
 
 		General
 		{
+			Ammunition Clip Size Scalar: 101%
+			No Ammunition Requirement: On
+			Ultimate Generation: 500%
+
+			Ana
+			{
+				No Ammunition Requirement: On
+				Sleep Dart Cooldown Time: 29%
+			}
+
 			Ashe
 			{
+				No Ammunition Requirement: On
+				Spawn With Ultimate Ready: On
 				Ultimate Ability B.O.B.: Off
+			}
+
+			Baptiste
+			{
+				No Ammunition Requirement: On
+			}
+
+			Bastion
+			{
+				No Ammunition Requirement: On
+				Reconfigure: Off
+				Ultimate Ability Configuration: Tank: Off
 			}
 
 			Cassidy
 			{
+				Ammunition Clip Size Scalar: 201%
+				No Ammunition Requirement: On
+				Secondary Fire: Off
 				Ultimate Ability Deadeye: Off
+			}
+
+			Doomfist
+			{
+				Ultimate Ability Meteor Strike: Off
+			}
+
+			Echo
+			{
+				No Ammunition Requirement: On
+			}
+
+			Genji
+			{
+				No Ammunition Requirement: On
+			}
+
+			Mei
+			{
+				Ice Wall: Off
+				No Ammunition Requirement: On
+				Primary Fire: Off
+				Ultimate Ability Blizzard: Off
+			}
+
+			Pharah
+			{
+				Ultimate Ability Barrage: Off
+			}
+
+			Reaper
+			{
+				Ultimate Ability Death Blossom: Off
+			}
+
+			Roadhog
+			{
+				Chain Hook Cooldown Time: 26%
+				Ultimate Ability Whole Hog: Off
+			}
+
+			Sigma
+			{
+				Ultimate Ability Gravitic Flux: Off
 			}
 
 			Soldier: 76
 			{
+				Ammunition Clip Size Scalar: 208%
 				Ultimate Ability Tactical Visor: Off
 			}
 
 			Sombra
 			{
-				Hack: Off
+				Ammunition Clip Size Scalar: 209%
+				Hack Cooldown Time: 38%
 				Ultimate Ability EMP: Off
+			}
+
+			Torbjörn
+			{
+				Deploy Turret: Off
+				No Ammunition Requirement: On
+				Ultimate Ability Molten Core: Off
+			}
+
+			Tracer
+			{
+				Ammunition Clip Size Scalar: 202%
+				Ultimate Generation - Combat Pulse Bomb: 41%
+			}
+
+			Widowmaker
+			{
+				Grappling Hook Cooldown Time: 0%
+				No Ammunition Requirement: On
+				Venom Mine: Off
+			}
+
+			Zarya
+			{
+				Primary Fire: Off
 			}
 
 			disabled heroes
 			{
-				Echo
+				Brigitte
+				Moira
+				Reinhardt
+				Winston
+				Wrecking Ball
 			}
 		}
 	}
@@ -118,7 +211,6 @@ settings
 variables
 {
 	player:
-		8: ULT
 		18: Immortal
 }
 
@@ -143,7 +235,6 @@ rule("Message")
 		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Left, 1, Color(
 			Team 1), Color(White), Color(White), String, Default Visibility);
 		Event Player.Immortal = False;
-		Event Player.ULT = False;
 	}
 }
 
@@ -537,32 +628,6 @@ rule("MCCREE strafe")
 		Wait(Random Real(0.250, 1), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
-		Loop If Condition Is True;
-	}
-}
-
-disabled rule("MCCREE flash")
-{
-	event
-	{
-		Player Took Damage;
-		Team 2;
-		Slot 0;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-		Distance Between(Event Player, Attacker) <= 10;
-	}
-
-	actions
-	{
-		Start Forcing Throttle(Event Player, 1, 1, 0, 1, 0, 1);
-		Press Button(Event Player, Button(Ability 1));
-		Wait(0.250, Ignore Condition);
-		Press Button(Event Player, Button(Ability 2));
-		Stop Forcing Throttle(Event Player);
 		Loop If Condition Is True;
 	}
 }
