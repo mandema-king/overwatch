@@ -2,7 +2,7 @@ settings
 {
 	main
 	{
-		Description: "Aim practice vs dummy bots. Think fast when you spawn; Reapers love teleporting behind people; any other controls are in top left of screen"
+		Description: "Practice vs. dummy bots that continuously strafe but only attack once injured."
 	}
 
 	lobby
