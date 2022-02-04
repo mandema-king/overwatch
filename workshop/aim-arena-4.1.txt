@@ -113,7 +113,7 @@ rule("PLAYER initialize")
 	{
 		Create HUD Text(Event Player, Global.game_name, Null, Null, Left, 0, Color(Purple), Color(White), Color(White), String,
 			Default Visibility);
-		Create HUD Text(Event Player, Custom String("'{0}' emote for Immortality", String("Thanks")), Null, Null, Left, 1, Color(Team 1),
+		Create HUD Text(Event Player, Custom String("'{0}' emote for Immortality", String("Healing")), Null, Null, Left, 1, Color(Team 1),
 			Color(White), Color(White), String, Default Visibility);
 		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Left, 1, Color(
 			Team 1), Color(White), Color(White), String, Default Visibility);
@@ -289,7 +289,7 @@ rule("PLAYER immortal on")
 	{
 		Is Alive(Event Player) == True;
 		Is Dummy Bot(Event Player) == False;
-		Is Communicating(Event Player, Thanks) == True;
+		Is Communicating(Event Player, Need Healing) == True;
 		Event Player.Immortal == False;
 	}
 
@@ -315,7 +315,7 @@ rule("PLAYER immortal off")
 	{
 		Is Alive(Event Player) == True;
 		Is Dummy Bot(Event Player) == False;
-		Is Communicating(Event Player, Thanks) == True;
+		Is Communicating(Event Player, Need Healing) == True;
 		Event Player.Immortal == True;
 	}
 
