@@ -369,9 +369,10 @@ rule("BOT turn and shoot")
 	{
 		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), 400, To World,
 			Direction and Turn Rate);
-		Start Holding Button(Event Player, Button(Primary Fire));
-		Wait(4, Ignore Condition);
-		Stop Holding Button(Event Player, Button(Primary Fire));
+		If(Distance Between(Event Player, Attacker) <= Event Player.primary_fire_max_range);
+			Start Holding Button(Event Player, Button(Primary Fire));
+			Wait(4, Ignore Condition);
+			Stop Holding Button(Event Player, Button(Primary Fire));
 	}
 }
 
