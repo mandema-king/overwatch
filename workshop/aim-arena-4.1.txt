@@ -146,12 +146,12 @@ rule("BOT create")
 
 	actions
 	{
-		Create Dummy Bot(Hero(Cassidy), Team 2, 0, Global.P[1], Vector(0, 0, 0));
-		Create Dummy Bot(Hero(Pharah), Team 2, 1, Global.P[2], Vector(0, 0, 0));
-		Create Dummy Bot(Hero(Mercy), Team 2, 2, Global.P[2], Vector(0, 0, 0));
-		Create Dummy Bot(Hero(Ashe), Team 2, 3, Global.P[3], Global.T[1]);
-		Create Dummy Bot(Hero(Genji), Team 2, 4, Global.P[5], Vector(0, 0, 0));
-		Create Dummy Bot(Hero(Reinhardt), Team 2, 5, Global.P[0], Global.T[1]);
+		Create Dummy Bot(Hero(Cassidy), Team 2, 0, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Pharah), Team 2, 1, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Mercy), Team 2, 2, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Ashe), Team 2, 3, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Genji), Team 2, 4, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Reinhardt), Team 2, 5, Vector(0, 0, 0), Vector(0, 0, 0));
 	}
 }
 
@@ -1347,7 +1347,7 @@ rule("REIN swap")
 	actions
 	{
 		Wait(Global.death_animation_time, Ignore Condition);
-		Teleport(Event Player, Global.P[0]);
+		Teleport(Event Player, Vector(0, 0, 0));
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
