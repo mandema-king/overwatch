@@ -60,11 +60,14 @@ variables
 		2: clear_hud_notifications_interval
 		3: hud_notification_sort_order
 		4: death_animation_time
+		5: targeting_interval
 
 	player:
 		0: hud_notification_text_ids
 		1: allowed_heroes
 		2: score
+		3: last_targeted_enemy
+		4: distance_to_targeted_enemy
 }
 
 subroutines
@@ -72,7 +75,7 @@ subroutines
 	0: AddLastHudTextIdToNotifications
 }
 
-rule("Workshop Settings")
+rule("Workshop settings")
 {
 	event
 	{
@@ -84,6 +87,8 @@ rule("Workshop Settings")
 		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
 		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("General"), Custom String(
 			"Clear HUD notification interval [seconds]"), 5, 5, 20, 1);
+		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
+			0.200, 1, 3);
 	}
 }
 
@@ -130,6 +135,11 @@ rule("PLAYER initialize")
 			Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(
 			Event Player, Hero Damage Dealt))), Null, Null, Left, Event Player.score * -0.010, Color(White), Color(White), Color(White),
 			Visible To Sort Order and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
+			90, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
+			Event Player.distance_to_targeted_enemy), Left, 91, Color(White), Color(White), Color(White), Visible To and String,
+			Default Visibility);
 	}
 }
 
@@ -1379,6 +1389,29 @@ rule("PLAYER leech 50% dmg done")
 	actions
 	{
 		Heal(Event Player, Event Player, Event Damage / 2);
+	}
+}
+
+rule("PLAYER targeting")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.last_targeted_enemy = Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player)));
+		Event Player.distance_to_targeted_enemy = Distance Between(Eye Position(Event Player), Event Player.last_targeted_enemy);
+		Wait(Global.targeting_interval, Ignore Condition);
+		Loop;
 	}
 }
 
