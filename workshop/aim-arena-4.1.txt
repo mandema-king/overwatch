@@ -59,6 +59,7 @@ variables
 		1: match_time
 		2: clear_hud_notifications_interval
 		3: hud_notification_sort_order
+		4: death_animation_time
 
 	player:
 		0: hud_notification_text_ids
@@ -100,6 +101,7 @@ rule("GLOBAL initialize")
 	actions
 	{
 		Set Match Time(Global.match_time * 60);
+		Global.death_animation_time = 2.400;
 		Global.game_name = Custom String("Aim Arena 4.1");
 		Global.hud_notification_sort_order = 1000;
 	}
@@ -504,7 +506,7 @@ rule("CASSIDY swap")
 
 	actions
 	{
-		Wait(2.400, Ignore Condition);
+		Wait(Global.death_animation_time, Ignore Condition);
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
@@ -1053,7 +1055,7 @@ rule("ASHE swap")
 
 	actions
 	{
-		Wait(2.400, Ignore Condition);
+		Wait(Global.death_animation_time, Ignore Condition);
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
@@ -1204,7 +1206,7 @@ rule("GENJI swap")
 	actions
 	{
 		Stop Holding Button(Players In Slot(4, Team 2), Button(Secondary Fire));
-		Wait(2.400, Ignore Condition);
+		Wait(Global.death_animation_time, Ignore Condition);
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 		Skip If(Hero Of(Event Player) == Hero(Genji), 1);
 		Stop Forcing Player To Be Hero(Event Player);
@@ -1346,7 +1348,7 @@ rule("REIN swap")
 
 	actions
 	{
-		Wait(2.400, Ignore Condition);
+		Wait(Global.death_animation_time, Ignore Condition);
 		Teleport(Event Player, Global.P[0]);
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
