@@ -1134,7 +1134,7 @@ rule("ASHE facing")
 	}
 }
 
-rule("ASHE shoot")
+rule("BOT 3 shoot")
 {
 	event
 	{
