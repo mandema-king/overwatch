@@ -1456,6 +1456,24 @@ rule("PLAYER dealt damage")
 	}
 }
 
+rule("PLAYER took damage")
+{
+	event
+	{
+		Player Took Damage;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} took {1} damage: {2}", Is Dummy Bot(Event Player) ? Hero Of(
+			Event Player) : Event Player, Event Was Critical Hit ? String("Critical") : String(""), Event Damage), Left, 200, Color(White),
+			Color(White), Event Was Critical Hit ? Color(Red) : Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
 rule("PLAYER self-kill (e.g. to switch hero)")
 {
 	event
