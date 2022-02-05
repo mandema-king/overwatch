@@ -286,6 +286,10 @@ rule("BOT death (stop holding buttons)")
 		Stop Holding Button(Event Player, Button(Secondary Fire));
 		Stop Holding Button(Event Player, Button(Ability 1));
 		Stop Holding Button(Event Player, Button(Ability 2));
+		Wait(Global.death_animation_time, Ignore Condition);
+		Teleport(Event Player, Vector(0, 0, 0));
+		If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Pharah));
+			Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
@@ -488,27 +492,6 @@ rule("CASSIDY roll")
 	actions
 	{
 		Press Button(Event Player, Button(Ability 1));
-	}
-}
-
-rule("CASSIDY swap")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Slot 0;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(Global.death_animation_time, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
@@ -1040,27 +1023,6 @@ rule("HANZO shoot")
 	}
 }
 
-rule("ASHE swap")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Slot 3;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(Global.death_animation_time, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
-	}
-}
-
 rule("GENJI look")
 {
 	event
@@ -1190,27 +1152,6 @@ rule("GENJI double jump")
 	}
 }
 
-rule("GENJI swap")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Slot 4;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(Global.death_animation_time, Ignore Condition);
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
-	}
-}
-
 rule("DOOM look")
 {
 	event
@@ -1327,28 +1268,6 @@ rule("DOOM ult")
 	actions
 	{
 		Press Button(Event Player, Button(Ultimate));
-	}
-}
-
-rule("REIN swap")
-{
-	event
-	{
-		Player Died;
-		Team 2;
-		Slot 5;
-	}
-
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
-	actions
-	{
-		Wait(Global.death_animation_time, Ignore Condition);
-		Teleport(Event Player, Vector(0, 0, 0));
-		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
