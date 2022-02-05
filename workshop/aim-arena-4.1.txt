@@ -39,21 +39,11 @@ settings
 				Weapons Enabled: Caduceus Staff Only
 			}
 
-			Torbjörn
-			{
-				Deploy Turret: Off
-			}
-
 			disabled heroes
 			{
 				Echo
 			}
 		}
-	}
-
-	workshop
-	{
-		Passive bots only attack when injured: Off
 	}
 }
 
