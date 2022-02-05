@@ -1148,7 +1148,7 @@ rule("BOT shoot")
 		Is Dummy Bot(Event Player) == True;
 		Hero Of(Event Player) != Hero(Hanzo);
 		Normalized Health(Event Player) <= 0.950;
-		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Players(Team 1),
+		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
 			Event Player, True) == True;
 	}
 
