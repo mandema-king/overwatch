@@ -50,6 +50,11 @@ settings
 			}
 		}
 	}
+
+	workshop
+	{
+		Passive bots only attack when injured: Off
+	}
 }
 
 variables
@@ -64,6 +69,7 @@ variables
 		6: show_damage_dealt_notifications
 		7: show_damage_taken_notifications
 		8: competitive_mode_enabled
+		9: passive_bots_enabled
 
 	player:
 		0: hud_notification_text_ids
@@ -93,6 +99,8 @@ rule("Workshop settings")
 		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
 		Global.competitive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String("Competitive mode (i.e. 2-2-2)"),
 			False, 0);
+		Global.passive_bots_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
+			"Passive bots (only attack when injured)"), True, 0);
 		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("General"), Custom String(
 			"Clear HUD notification interval [seconds]"), 5, 5, 20, 0);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
@@ -1184,7 +1192,7 @@ rule("BOT shoot")
 	{
 		Is Dummy Bot(Event Player) == True;
 		Hero Of(Event Player) != Hero(Hanzo);
-		Normalized Health(Event Player) <= 0.950;
+		(Global.passive_bots_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
 			Event Player, True) == True;
 		Distance Between(Event Player, Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player))))
