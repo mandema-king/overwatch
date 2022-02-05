@@ -145,9 +145,8 @@ rule("PLAYER initialize")
 			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_falloff_range ? Color(Green) : (
 			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_max_range ? Color(Yellow) : Color(Red)), String and Color,
 			Default Visibility);
-		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire maximum range: {0} m",
-			Event Player.primary_fire_max_range), Left, 92, Color(White), Color(White), Color(White), Visible To and String,
-			Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire maximum range: {0} m", Event Player.primary_fire_max_range),
+			Left, 92, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire falloff range: {0} m",
 			Event Player.primary_fire_falloff_range), Left, 93, Color(White), Color(White), Color(White), Visible To and String,
 			Default Visibility);
