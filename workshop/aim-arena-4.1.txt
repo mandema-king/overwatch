@@ -1231,6 +1231,34 @@ rule("HANZO shoot")
 	}
 }
 
+rule("BOT ultimate")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Hero Of(Event Player) != Hero(Doomfist);
+		Hero Of(Event Player) != Hero(Mercy);
+		Ultimate Charge Percent(Event Player) == 100;
+		(Global.passive_bots_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
+		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
+			Event Player, True) == True;
+	}
+
+	actions
+	{
+		Press Button(Event Player, Button(Ultimate));
+		Wait(1, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
 rule("GENJI look")
 {
 	event
