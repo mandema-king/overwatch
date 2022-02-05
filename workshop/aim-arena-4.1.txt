@@ -199,6 +199,125 @@ rule("BOT create")
 	}
 }
 
+rule("HERO configuration")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Hero Of(Event Player) != Event Player.current_hero;
+	}
+
+	actions
+	{
+		Event Player.current_hero = Hero Of(Event Player);
+		If(Event Player.current_hero == Hero(Ana));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Ashe));
+			Event Player.primary_fire_falloff_range = 20;
+			Event Player.primary_fire_max_range = 40;
+		Else If(Event Player.current_hero == Hero(Baptiste));
+			Event Player.primary_fire_falloff_range = 25;
+			Event Player.primary_fire_max_range = 45;
+		Else If(Event Player.current_hero == Hero(Bastion));
+			Event Player.primary_fire_falloff_range = 25;
+			Event Player.primary_fire_max_range = 45;
+		Else If(Event Player.current_hero == Hero(Brigitte));
+			Event Player.primary_fire_falloff_range = 20;
+			Event Player.primary_fire_max_range = 20;
+		Else If(Event Player.current_hero == Hero(Cassidy));
+			Event Player.primary_fire_falloff_range = 20;
+			Event Player.primary_fire_max_range = 40;
+		Else If(Event Player.current_hero == Hero(D.Va));
+			Event Player.primary_fire_falloff_range = 10;
+			Event Player.primary_fire_max_range = 20;
+		Else If(Event Player.current_hero == Hero(Doomfist));
+			Event Player.primary_fire_falloff_range = 15;
+			Event Player.primary_fire_max_range = 30;
+		Else If(Event Player.current_hero == Hero(Echo));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Genji));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Hanzo));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Junkrat));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Lúcio));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Mei));
+			Event Player.primary_fire_falloff_range = 10;
+			Event Player.primary_fire_max_range = 10;
+		Else If(Event Player.current_hero == Hero(Mercy));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Moira));
+			Event Player.primary_fire_falloff_range = 0;
+			Event Player.primary_fire_max_range = 0;
+		Else If(Event Player.current_hero == Hero(Orisa));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Pharah));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Reaper));
+			Event Player.primary_fire_falloff_range = 10;
+			Event Player.primary_fire_max_range = 20;
+		Else If(Event Player.current_hero == Hero(Reinhardt));
+			Event Player.primary_fire_falloff_range = 5;
+			Event Player.primary_fire_max_range = 5;
+		Else If(Event Player.current_hero == Hero(Roadhog));
+			Event Player.primary_fire_falloff_range = 15;
+			Event Player.primary_fire_max_range = 30;
+		Else If(Event Player.current_hero == Hero(Sigma));
+			Event Player.primary_fire_falloff_range = 22;
+			Event Player.primary_fire_max_range = 22;
+		Else If(Event Player.current_hero == Hero(Soldier: 76));
+			Event Player.primary_fire_falloff_range = 30;
+			Event Player.primary_fire_max_range = 50;
+		Else If(Event Player.current_hero == Hero(Sombra));
+			Event Player.primary_fire_falloff_range = 15;
+			Event Player.primary_fire_max_range = 35;
+		Else If(Event Player.current_hero == Hero(Symmetra));
+			Event Player.primary_fire_falloff_range = 12;
+			Event Player.primary_fire_max_range = 12;
+		Else If(Event Player.current_hero == Hero(Torbjörn));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		Else If(Event Player.current_hero == Hero(Tracer));
+			Event Player.primary_fire_falloff_range = 12;
+			Event Player.primary_fire_max_range = 20;
+		Else If(Event Player.current_hero == Hero(Widowmaker));
+			Event Player.primary_fire_falloff_range = 20;
+			Event Player.primary_fire_max_range = 40;
+		Else If(Event Player.current_hero == Hero(Winston));
+			Event Player.primary_fire_falloff_range = 8;
+			Event Player.primary_fire_max_range = 8;
+		Else If(Event Player.current_hero == Hero(Wrecking Ball));
+			Event Player.primary_fire_falloff_range = 15;
+			Event Player.primary_fire_max_range = 25;
+		Else If(Event Player.current_hero == Hero(Zarya));
+			Event Player.primary_fire_falloff_range = 15;
+			Event Player.primary_fire_max_range = 15;
+		Else If(Event Player.current_hero == Hero(Zenyatta));
+			Event Player.primary_fire_falloff_range = 100;
+			Event Player.primary_fire_max_range = 100;
+		End;
+		Big Message(Event Player, Custom String("Primary fire range: {0}", String("{0} m", Event Player.primary_fire_max_range)));
+	}
+}
+
 rule("BOT role lock")
 {
 	event
@@ -1312,125 +1431,6 @@ rule("DOOM ult")
 	actions
 	{
 		Press Button(Event Player, Button(Ultimate));
-	}
-}
-
-rule("HERO configuration")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		All;
-	}
-
-	conditions
-	{
-		Has Spawned(Event Player) == True;
-		Hero Of(Event Player) != Event Player.current_hero;
-	}
-
-	actions
-	{
-		Event Player.current_hero = Hero Of(Event Player);
-		If(Event Player.current_hero == Hero(Ana));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Ashe));
-			Event Player.primary_fire_falloff_range = 20;
-			Event Player.primary_fire_max_range = 40;
-		Else If(Event Player.current_hero == Hero(Baptiste));
-			Event Player.primary_fire_falloff_range = 25;
-			Event Player.primary_fire_max_range = 45;
-		Else If(Event Player.current_hero == Hero(Bastion));
-			Event Player.primary_fire_falloff_range = 25;
-			Event Player.primary_fire_max_range = 45;
-		Else If(Event Player.current_hero == Hero(Brigitte));
-			Event Player.primary_fire_falloff_range = 20;
-			Event Player.primary_fire_max_range = 20;
-		Else If(Event Player.current_hero == Hero(Cassidy));
-			Event Player.primary_fire_falloff_range = 20;
-			Event Player.primary_fire_max_range = 40;
-		Else If(Event Player.current_hero == Hero(D.Va));
-			Event Player.primary_fire_falloff_range = 10;
-			Event Player.primary_fire_max_range = 20;
-		Else If(Event Player.current_hero == Hero(Doomfist));
-			Event Player.primary_fire_falloff_range = 15;
-			Event Player.primary_fire_max_range = 30;
-		Else If(Event Player.current_hero == Hero(Echo));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Genji));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Hanzo));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Junkrat));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Lúcio));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Mei));
-			Event Player.primary_fire_falloff_range = 10;
-			Event Player.primary_fire_max_range = 10;
-		Else If(Event Player.current_hero == Hero(Mercy));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Moira));
-			Event Player.primary_fire_falloff_range = 0;
-			Event Player.primary_fire_max_range = 0;
-		Else If(Event Player.current_hero == Hero(Orisa));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Pharah));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Reaper));
-			Event Player.primary_fire_falloff_range = 10;
-			Event Player.primary_fire_max_range = 20;
-		Else If(Event Player.current_hero == Hero(Reinhardt));
-			Event Player.primary_fire_falloff_range = 5;
-			Event Player.primary_fire_max_range = 5;
-		Else If(Event Player.current_hero == Hero(Roadhog));
-			Event Player.primary_fire_falloff_range = 15;
-			Event Player.primary_fire_max_range = 30;
-		Else If(Event Player.current_hero == Hero(Sigma));
-			Event Player.primary_fire_falloff_range = 22;
-			Event Player.primary_fire_max_range = 22;
-		Else If(Event Player.current_hero == Hero(Soldier: 76));
-			Event Player.primary_fire_falloff_range = 30;
-			Event Player.primary_fire_max_range = 50;
-		Else If(Event Player.current_hero == Hero(Sombra));
-			Event Player.primary_fire_falloff_range = 15;
-			Event Player.primary_fire_max_range = 35;
-		Else If(Event Player.current_hero == Hero(Symmetra));
-			Event Player.primary_fire_falloff_range = 12;
-			Event Player.primary_fire_max_range = 12;
-		Else If(Event Player.current_hero == Hero(Torbjörn));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		Else If(Event Player.current_hero == Hero(Tracer));
-			Event Player.primary_fire_falloff_range = 12;
-			Event Player.primary_fire_max_range = 20;
-		Else If(Event Player.current_hero == Hero(Widowmaker));
-			Event Player.primary_fire_falloff_range = 20;
-			Event Player.primary_fire_max_range = 40;
-		Else If(Event Player.current_hero == Hero(Winston));
-			Event Player.primary_fire_falloff_range = 8;
-			Event Player.primary_fire_max_range = 8;
-		Else If(Event Player.current_hero == Hero(Wrecking Ball));
-			Event Player.primary_fire_falloff_range = 15;
-			Event Player.primary_fire_max_range = 25;
-		Else If(Event Player.current_hero == Hero(Zarya));
-			Event Player.primary_fire_falloff_range = 15;
-			Event Player.primary_fire_max_range = 15;
-		Else If(Event Player.current_hero == Hero(Zenyatta));
-			Event Player.primary_fire_falloff_range = 100;
-			Event Player.primary_fire_max_range = 100;
-		End;
-		Big Message(Event Player, Custom String("Primary fire range: {0}", String("{0} m", Event Player.primary_fire_max_range)));
 	}
 }
 
