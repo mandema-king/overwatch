@@ -283,6 +283,7 @@ rule("BOT death (stop holding buttons)")
 	actions
 	{
 		Stop Holding Button(Event Player, Button(Primary Fire));
+		Stop Holding Button(Event Player, Button(Secondary Fire));
 		Stop Holding Button(Event Player, Button(Ability 1));
 		Stop Holding Button(Event Player, Button(Ability 2));
 	}
@@ -1205,11 +1206,8 @@ rule("GENJI swap")
 
 	actions
 	{
-		Stop Holding Button(Players In Slot(4, Team 2), Button(Secondary Fire));
 		Wait(Global.death_animation_time, Ignore Condition);
 		Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
-		Skip If(Hero Of(Event Player) == Hero(Genji), 1);
-		Stop Forcing Player To Be Hero(Event Player);
 	}
 }
 
