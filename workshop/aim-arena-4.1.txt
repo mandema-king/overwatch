@@ -1447,6 +1447,10 @@ rule("PLAYER dealt damage")
 	actions
 	{
 		Event Player.score += Event Damage;
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} Damage dealt: {1} {2}", Event Was Critical Hit ? String("Critical")
+			: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left, 200, Color(White),
+			Color(White), Event Was Critical Hit ? Color(Red) : Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
 
