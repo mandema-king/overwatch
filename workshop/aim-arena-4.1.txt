@@ -125,9 +125,28 @@ rule("PLAYER initialize")
 	{
 		Create HUD Text(Event Player, Global.game_name, Null, Null, Left, 0, Color(Purple), Color(White), Color(White), String,
 			Default Visibility);
-		Create HUD Text(Event Player, Custom String("'{0}' emote for Immortality", String("Healing")), Null, Null, Left, 1, Color(Team 1),
+	}
+}
+
+rule("PLAYER show help")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Custom String("'{0}' emote for Immortality", String("Healing")), Null, Null, Right, 1, Color(Team 1),
 			Color(White), Color(White), String, Default Visibility);
-		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Left, 1, Color(
+		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Right, 1, Color(
 			Team 1), Color(White), Color(White), String, Default Visibility);
 	}
 }
