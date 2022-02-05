@@ -60,6 +60,7 @@ variables
 		7: show_damage_taken_notifications
 		8: competitive_mode_enabled
 		9: passive_bots_enabled
+		10: hero_death_threshold
 
 	player:
 		0: hud_notification_text_ids
@@ -70,6 +71,7 @@ variables
 		5: current_hero
 		6: primary_fire_max_range
 		7: primary_fire_falloff_range
+		8: current_hero_deaths
 }
 
 subroutines
@@ -89,6 +91,8 @@ rule("Workshop settings")
 		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
 		Global.competitive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String("Competitive mode (i.e. 2-2-2)"),
 			False, 0);
+		Global.hero_death_threshold = Workshop Setting Integer(Custom String("General"), Custom String("Hero death threshold"), 2, 1, 10,
+			0);
 		Global.passive_bots_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
 			"Passive bots (only attack when injured)"), True, 0);
 		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("General"), Custom String(
@@ -252,6 +256,7 @@ rule("HERO configuration")
 	actions
 	{
 		Event Player.current_hero = Hero Of(Event Player);
+		Event Player.current_hero_deaths = 0;
 		If(Event Player.current_hero == Hero(Ana));
 			Event Player.primary_fire_falloff_range = 100;
 			Event Player.primary_fire_max_range = 100;
@@ -481,6 +486,7 @@ rule("BOT death")
 
 	actions
 	{
+		Event Player.current_hero_deaths += 1;
 		Stop Holding Button(Event Player, Button(Primary Fire));
 		Stop Holding Button(Event Player, Button(Secondary Fire));
 		Stop Holding Button(Event Player, Button(Ability 1));
@@ -488,7 +494,8 @@ rule("BOT death")
 		Wait(Global.death_animation_time, Ignore Condition);
 		Teleport(Event Player, Vector(0, 0, 0));
 		If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Pharah));
-			Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
+			If(Event Player.current_hero_deaths >= Global.hero_death_threshold);
+				Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
 	}
 }
 
