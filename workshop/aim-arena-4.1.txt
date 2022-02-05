@@ -1457,8 +1457,9 @@ rule("PLAYER dealt damage")
 		Event Player.score += Event Damage;
 		If(Global.show_damage_dealt_notifications);
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} Damage dealt: {1} {2}", Event Was Critical Hit ? String("Critical")
-				: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left, 200, Color(White),
-				Color(White), Event Was Critical Hit ? Color(Red) : Color(White), Visible To and String, Default Visibility);
+				: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left,
+				Global.hud_notification_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
+				Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
@@ -1476,8 +1477,9 @@ rule("PLAYER took damage")
 	{
 		If(Global.show_damage_taken_notifications);
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} took {1} damage: {2}", Is Dummy Bot(Event Player) ? Hero Of(
-				Event Player) : Event Player, Event Was Critical Hit ? String("Critical") : String(""), Event Damage), Left, 200, Color(White),
-				Color(White), Event Was Critical Hit ? Color(Red) : Color(White), Visible To and String, Default Visibility);
+				Event Player) : Event Player, Event Was Critical Hit ? String("Critical") : String(""), Event Damage), Left,
+				Global.hud_notification_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
+				Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
