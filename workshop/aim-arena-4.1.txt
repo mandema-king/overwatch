@@ -285,7 +285,7 @@ rule("BOT crouch")
 	}
 }
 
-rule("BOT death (stop holding buttons)")
+rule("BOT death")
 {
 	event
 	{
