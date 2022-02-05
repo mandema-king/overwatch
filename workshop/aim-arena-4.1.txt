@@ -1150,6 +1150,8 @@ rule("BOT shoot")
 		Normalized Health(Event Player) <= 0.950;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
 			Event Player, True) == True;
+		Distance Between(Event Player, Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player))))
+			<= Event Player.primary_fire_max_range;
 	}
 
 	actions
