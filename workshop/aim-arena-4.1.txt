@@ -1134,13 +1134,13 @@ rule("ASHE facing")
 	}
 }
 
-rule("BOT 3 shoot")
+rule("BOT shoot")
 {
 	event
 	{
 		Ongoing - Each Player;
 		Team 2;
-		Slot 3;
+		All;
 	}
 
 	conditions
