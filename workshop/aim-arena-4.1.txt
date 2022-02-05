@@ -1524,14 +1524,14 @@ rule("PLAYER toggle immortality")
 		If(Has Status(Event Player, Unkillable));
 			Clear Status(Event Player, Unkillable);
 			Big Message(Event Player, Custom String("Immortality: off"));
-			Create HUD Text(Event Player, Null, Null, Custom String("You are no longer immortal"), Left, Global.hud_notification_sort_order,
-				Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is no longer immortal", Event Player), Left,
+				Global.hud_notification_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 		Else;
 			Set Status(Event Player, Null, Unkillable, 9999);
 			Big Message(Event Player, Custom String("Immortality: on"));
-			Create HUD Text(Event Player, Null, Null, Custom String("You are now immortal"), Left, Global.hud_notification_sort_order, Color(
-				White), Color(White), Color(White), Visible To and String, Default Visibility);
+			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is now immortal", Event Player), Left,
+				Global.hud_notification_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
