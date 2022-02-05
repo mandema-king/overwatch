@@ -64,6 +64,7 @@ variables
 	player:
 		0: hud_notification_text_ids
 		1: allowed_heroes
+		2: score
 }
 
 subroutines
@@ -123,12 +124,12 @@ rule("PLAYER initialize")
 
 	actions
 	{
-		Create HUD Text(Event Player, Global.game_name, Null, Null, Left, 0, Color(Purple), Color(White), Color(White), String,
+		Create HUD Text(Event Player, Global.game_name, Null, Null, Left, -100000, Color(Purple), Color(White), Color(White), String,
 			Default Visibility);
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1} {2}", Hero Icon String(Hero Of(Event Player)), Event Player,
 			Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(
-			Event Player, Hero Damage Dealt))), Null, Null, Left, 1, Color(White), Color(White), Color(White),
-			Visible To and String, Default Visibility);
+			Event Player, Hero Damage Dealt))), Null, Null, Left, Event Player.score * -0.010, Color(White), Color(White), Color(White),
+			Visible To Sort Order and String, Default Visibility);
 	}
 }
 
@@ -1291,6 +1292,21 @@ rule("DOOM ult")
 	actions
 	{
 		Press Button(Event Player, Button(Ultimate));
+	}
+}
+
+rule("PLAYER dealt damage")
+{
+	event
+	{
+		Player Dealt Damage;
+		Team 1;
+		All;
+	}
+
+	actions
+	{
+		Event Player.score += Event Damage;
 	}
 }
 
