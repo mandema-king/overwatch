@@ -204,7 +204,7 @@ rule("HERO configuration")
 	event
 	{
 		Ongoing - Each Player;
-		Team 1;
+		All;
 		All;
 	}
 
