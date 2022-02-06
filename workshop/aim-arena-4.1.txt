@@ -132,7 +132,7 @@ rule("GLOBAL initialize")
 	{
 		Set Match Time(Global.match_time * 60);
 		Global.death_animation_time = 2.400;
-		Global.game_name = Custom String("Aim Arena 4.1");
+		Global.game_name = Custom String("Aim Arena 4.1 - VKG1W");
 		Global.hud_notification_sort_order = 1000;
 		Global.hud_player_help_sort_order = 200;
 		Global.hud_player_info_sort_order = 100;
