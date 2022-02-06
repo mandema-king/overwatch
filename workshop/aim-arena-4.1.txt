@@ -61,7 +61,7 @@ variables
 		0: game_name
 		1: match_time
 		2: hud_clear_notifications_interval
-		3: hud_notification_sort_order
+		3: hud_notifications_sort_order
 		4: death_animation_time
 		5: targeting_interval
 		6: show_damage_dealt_notifications
@@ -133,7 +133,7 @@ rule("GLOBAL initialize")
 		Set Match Time(Global.match_time * 60);
 		Global.death_animation_time = 2.400;
 		Global.game_name = Custom String("Aim Arena 4.1 - VKG1W");
-		Global.hud_notification_sort_order = 1000;
+		Global.hud_notifications_sort_order = 1000;
 		Global.hud_player_help_sort_order = 200;
 		Global.hud_player_info_sort_order = 100;
 	}
@@ -1641,7 +1641,7 @@ rule("PLAYER dealt damage")
 		If(Global.show_damage_dealt_notifications);
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} Damage dealt: {1} {2}", Event Was Critical Hit ? String("Critical")
 				: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left,
-				Global.hud_notification_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
+				Global.hud_notifications_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
 				Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
@@ -1661,7 +1661,7 @@ rule("PLAYER took damage")
 		If(Global.show_damage_taken_notifications);
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} took {1} damage: {2}", Is Dummy Bot(Event Player) ? Hero Of(
 				Event Player) : Event Player, Event Was Critical Hit ? String("Critical") : String(""), Event Damage), Left,
-				Global.hud_notification_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
+				Global.hud_notifications_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
 				Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
@@ -1708,13 +1708,13 @@ rule("PLAYER toggle immortality")
 			Clear Status(Event Player, Unkillable);
 			Big Message(Event Player, Custom String("Immortality: off"));
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is no longer immortal", Event Player), Left,
-				Global.hud_notification_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 		Else;
 			Set Status(Event Player, Null, Unkillable, 9999);
 			Big Message(Event Player, Custom String("Immortality: on"));
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is now immortal", Event Player), Left,
-				Global.hud_notification_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
 			Call Subroutine(AddLastHudTextIdToNotifications);
 	}
 }
