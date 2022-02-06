@@ -69,6 +69,8 @@ variables
 		8: competitive_mode_enabled
 		9: passive_bots_enabled
 		10: hero_death_threshold
+		11: hud_player_help_sort_order
+		12: hud_player_info_sort_order
 
 	player:
 		0: hud_notification_text_ids
@@ -132,10 +134,12 @@ rule("GLOBAL initialize")
 		Global.death_animation_time = 2.400;
 		Global.game_name = Custom String("Aim Arena 4.1");
 		Global.hud_notification_sort_order = 1000;
+		Global.hud_player_help_sort_order = 200;
+		Global.hud_player_info_sort_order = 100;
 	}
 }
 
-rule("PLAYER initialize")
+rule("HUD - game name")
 {
 	event
 	{
@@ -151,29 +155,63 @@ rule("PLAYER initialize")
 
 	actions
 	{
-		Create HUD Text(Event Player, Global.game_name, Null, Null, Left, -100000, Color(Purple), Color(White), Color(White), String,
-			Default Visibility);
+		Create HUD Text(Event Player, Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White), String,
+			Visible Always);
+	}
+}
+
+rule("HUD - scoreboard spacing")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+	}
+}
+
+rule("HUD - Team 1 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Event Player,
 			Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(
 			Event Player, Hero Damage Dealt))), Null, Null, Left, Player Stat(Event Player, All Damage Dealt) * -0.010, Has Status(
 			Event Player, Unkillable) ? Color(Orange) : Color(White), Color(White), Color(White), Visible To Sort Order String and Color,
 			Visible Always);
-		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
-			90, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
-			Event Player.distance_to_targeted_enemy), Left, 91, Color(White), Color(White),
-			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_falloff_range ? Color(Green) : (
-			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_max_range ? Color(Yellow) : Color(Red)), String and Color,
-			Default Visibility);
-		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire maximum range: {0} m", Event Player.primary_fire_max_range),
-			Left, 92, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
-		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire falloff range: {0} m",
-			Event Player.primary_fire_falloff_range), Left, 93, Color(White), Color(White), Color(White), Visible To and String,
-			Default Visibility);
 	}
 }
 
-rule("PLAYER show help")
+rule("HUD - player info")
 {
 	event
 	{
@@ -189,27 +227,65 @@ rule("PLAYER show help")
 
 	actions
 	{
-		Create HUD Text(Event Player, String("Help"), Null, Null, Right, 100, Color(Orange), Color(White), Color(White), String,
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, Global.hud_player_info_sort_order, Color(White),
+			Color(White), Color(White), String, Visible Always);
+		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
+			Global.hud_player_info_sort_order + 10, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
+			Event Player.distance_to_targeted_enemy), Left, Global.hud_player_info_sort_order + 20, Color(White), Color(White),
+			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_falloff_range ? Color(Green) : (
+			Event Player.distance_to_targeted_enemy <= Event Player.primary_fire_max_range ? Color(Yellow) : Color(Red)), String and Color,
 			Default Visibility);
-		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		If(Global.passive_bots_enabled);
-			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right, 110, Color(White), Color(
-				White), Color(Orange), String, Default Visibility);
-			Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		End;
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 120, Color(
-			White), Color(White), Color(Orange), String, Default Visibility);
-		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right, 130, Color(
-			White), Color(White), Color(Orange), String, Default Visibility);
-		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote 'acknowledge' to hide help text"), Right, 140, Color(White), Color(
-			White), Color(Orange), String, Default Visibility);
-		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire maximum range: {0} m", Event Player.primary_fire_max_range),
+			Left, Global.hud_player_info_sort_order + 30, Color(White), Color(White), Color(White), Visible To and String,
+			Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Primary fire falloff range: {0} m",
+			Event Player.primary_fire_falloff_range), Left, Global.hud_player_info_sort_order + 40, Color(White), Color(White), Color(
+			White), Visible To and String, Default Visibility);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, Global.hud_player_info_sort_order + 99, Color(
+			White), Color(White), Color(White), String, Default Visibility);
 	}
 }
 
-rule("PLAYER hide help")
+rule("HUD - show help")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, String("Help"), Null, Null, Right, Global.hud_player_help_sort_order, Color(Orange), Color(White),
+			Color(White), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		If(Global.passive_bots_enabled);
+			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right,
+				Global.hud_player_help_sort_order + 10, Color(White), Color(White), Color(Orange), String, Default Visibility);
+			Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		End;
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right,
+			Global.hud_player_help_sort_order + 20, Color(White), Color(White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right,
+			Global.hud_player_help_sort_order + 30, Color(White), Color(White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote 'acknowledge' to hide help text"), Right,
+			Global.hud_player_help_sort_order + 40, Color(White), Color(White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, Global.hud_player_help_sort_order + 99, Color(
+			White), Color(White), Color(White), String, Default Visibility);
+	}
+}
+
+rule("HUD - hide help")
 {
 	event
 	{
@@ -259,7 +335,7 @@ rule("BOT create")
 	}
 }
 
-rule("BOT initialize")
+rule("HUD - Team 2 scoreboard")
 {
 	event
 	{
