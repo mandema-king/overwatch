@@ -72,6 +72,7 @@ variables
 		6: primary_fire_max_range
 		7: primary_fire_falloff_range
 		8: current_hero_deaths
+		9: help_text_ids
 }
 
 subroutines
@@ -182,10 +183,39 @@ rule("PLAYER show help")
 	{
 		Create HUD Text(Event Player, String("Help"), Null, Null, Right, 100, Color(Orange), Color(White), Color(White), String,
 			Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
 		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 110, Color(
 			White), Color(White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
 		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right, 120, Color(
 			White), Color(White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote 'acknowledge' to hide help text"), Right, 120, Color(White), Color(
+			White), Color(Orange), String, Default Visibility);
+		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+	}
+}
+
+rule("PLAYER hide help")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Is Communicating(Event Player, Acknowledge) == True;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.help_text_ids));
+			Destroy HUD Text(Event Player.help_text_ids[0]);
+			Modify Player Variable(Event Player, help_text_ids, Remove From Array By Index, 0);
+		End;
 	}
 }
 
