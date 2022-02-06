@@ -148,7 +148,7 @@ rule("PLAYER initialize")
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Event Player,
 			Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(
 			Event Player, Hero Damage Dealt))), Null, Null, Left, Event Player.score * -0.010, Has Status(Event Player, Unkillable)
-			? Color(Red) : Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
+			? Color(Orange) : Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
 		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
 			90, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
