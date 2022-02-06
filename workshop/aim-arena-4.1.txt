@@ -1176,7 +1176,7 @@ rule("ASHE facing")
 	}
 }
 
-rule("BOT shoot")
+rule("RBOT primary fire")
 {
 	event
 	{
