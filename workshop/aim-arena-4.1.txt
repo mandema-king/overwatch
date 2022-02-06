@@ -60,7 +60,7 @@ variables
 	global:
 		0: game_name
 		1: match_time
-		2: clear_hud_notifications_interval
+		2: hud_clear_notifications_interval
 		3: hud_notification_sort_order
 		4: death_animation_time
 		5: targeting_interval
@@ -111,7 +111,7 @@ rule("Workshop settings")
 			"Show damage dealt"), True, 10);
 		Global.show_damage_taken_notifications = Workshop Setting Toggle(Custom String("Notifications"), Custom String(
 			"Show damage taken"), False, 20);
-		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("Notifications"), Custom String(
+		Global.hud_clear_notifications_interval = Workshop Setting Integer(Custom String("Notifications"), Custom String(
 			"Clear HUD notification interval [seconds]"), 5, 5, 20, 30);
 	}
 }
@@ -1791,7 +1791,7 @@ rule("Remove HUD notifications")
 			Destroy HUD Text(Event Player.hud_notification_text_ids[0]);
 			Modify Player Variable(Event Player, hud_notification_text_ids, Remove From Array By Index, 0);
 		End;
-		Wait(Global.clear_hud_notifications_interval, Ignore Condition);
+		Wait(Global.hud_clear_notifications_interval, Ignore Condition);
 		Loop;
 	}
 }
