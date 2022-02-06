@@ -65,7 +65,6 @@ variables
 	player:
 		0: hud_notification_text_ids
 		1: allowed_heroes
-		2: score
 		3: last_targeted_enemy
 		4: distance_to_targeted_enemy
 		5: current_hero
@@ -148,8 +147,9 @@ rule("PLAYER initialize")
 			Default Visibility);
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Event Player,
 			Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(
-			Event Player, Hero Damage Dealt))), Null, Null, Left, Event Player.score * -0.010, Has Status(Event Player, Unkillable)
-			? Color(Orange) : Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
+			Event Player, Hero Damage Dealt))), Null, Null, Left, Player Stat(Event Player, All Damage Dealt) * -0.010, Has Status(
+			Event Player, Unkillable) ? Color(Orange) : Color(White), Color(White), Color(White), Visible To Sort Order String and Color,
+			Visible Always);
 		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
 			90, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
@@ -185,9 +185,10 @@ rule("PLAYER show help")
 			Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
 		If(Global.passive_bots_enabled);
-			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right,
-				110, Color(White), Color(White), Color(Orange), String, Default Visibility);
+			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right, 110, Color(White), Color(
+				White), Color(Orange), String, Default Visibility);
 			Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		End;
 		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 120, Color(
 			White), Color(White), Color(Orange), String, Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
@@ -268,8 +269,8 @@ rule("BOT initialize")
 	{
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), String("{0} {1}",
 			Custom String("Bot"), Slot Of(Event Player) + 1), Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows),
-			Player Stat(Event Player, Deaths), Player Stat(Event Player, Hero Damage Dealt))), Null, Null, Right,
-			Event Player.score * -0.010, Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
+			Player Stat(Event Player, Deaths), Player Stat(Event Player, Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player,
+			All Damage Dealt) * -0.010, Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
 	}
 }
 
@@ -1553,7 +1554,6 @@ rule("PLAYER dealt damage")
 
 	actions
 	{
-		Event Player.score += Event Damage;
 		If(Global.show_damage_dealt_notifications);
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} Damage dealt: {1} {2}", Event Was Critical Hit ? String("Critical")
 				: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left,
