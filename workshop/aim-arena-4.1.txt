@@ -233,7 +233,7 @@ rule("BOT initialize")
 	actions
 	{
 		Create HUD Text(All Players(Team 1), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), String("{0} {1}",
-			Custom String("Bot"), Slot Of(Event Player)), Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows),
+			Custom String("Bot"), Slot Of(Event Player) + 1), Custom String("{0} / {1} / {2}", Player Stat(Event Player, Final Blows),
 			Player Stat(Event Player, Deaths), Player Stat(Event Player, Hero Damage Dealt))), Null, Null, Right,
 			Event Player.score * -0.010, Color(White), Color(White), Color(White), Visible To Sort Order String and Color, Visible Always);
 	}
