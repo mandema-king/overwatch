@@ -107,12 +107,12 @@ rule("Workshop settings")
 			40);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
 			0.200, 1, 50);
-		Global.show_damage_dealt_notifications = Workshop Setting Toggle(Custom String("Notifications"), Custom String(
-			"Show damage dealt"), True, 10);
-		Global.show_damage_taken_notifications = Workshop Setting Toggle(Custom String("Notifications"), Custom String(
-			"Show damage taken"), False, 20);
-		Global.hud_clear_notifications_interval = Workshop Setting Integer(Custom String("Notifications"), Custom String(
-			"Clear HUD notification interval [seconds]"), 5, 5, 20, 30);
+		Global.show_damage_dealt_notifications = Workshop Setting Toggle(Custom String("HUD - Notifications"), Custom String(
+			"Show damage dealt notifications"), True, 10);
+		Global.show_damage_taken_notifications = Workshop Setting Toggle(Custom String("HUD - Notifications"), Custom String(
+			"Show damage taken notifications"), False, 20);
+		Global.hud_clear_notifications_interval = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
+			"Clear notifications interval [seconds]"), 5, 5, 20, 30);
 	}
 }
 
