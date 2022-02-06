@@ -184,13 +184,17 @@ rule("PLAYER show help")
 		Create HUD Text(Event Player, String("Help"), Null, Null, Right, 100, Color(Orange), Color(White), Color(White), String,
 			Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 110, Color(
+		If(Global.passive_bots_enabled);
+			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right,
+				110, Color(White), Color(White), Color(Orange), String, Default Visibility);
+			Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 120, Color(
 			White), Color(White), Color(Orange), String, Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right, 120, Color(
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right, 130, Color(
 			White), Color(White), Color(Orange), String, Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		Create HUD Text(Event Player, Null, Null, Custom String("Emote 'acknowledge' to hide help text"), Right, 120, Color(White), Color(
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote 'acknowledge' to hide help text"), Right, 140, Color(White), Color(
 			White), Color(Orange), String, Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
 	}
