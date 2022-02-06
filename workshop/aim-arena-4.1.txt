@@ -32,6 +32,14 @@ settings
 
 	heroes
 	{
+		Team 1
+		{
+			disabled heroes
+			{
+				Torbjörn
+			}
+		}
+
 		Team 2
 		{
 			Mercy
