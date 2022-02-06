@@ -88,21 +88,21 @@ rule("Workshop settings")
 
 	actions
 	{
-		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 0);
+		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 10);
 		Global.competitive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String("Competitive mode (i.e. 2-2-2)"),
-			False, 0);
-		Global.hero_death_threshold = Workshop Setting Integer(Custom String("General"), Custom String("Hero death threshold"), 2, 1, 10,
-			0);
+			False, 20);
 		Global.passive_bots_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
-			"Passive bots (only attack when injured)"), True, 0);
-		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("General"), Custom String(
-			"Clear HUD notification interval [seconds]"), 5, 5, 20, 0);
+			"Passive bots (only attack when injured)"), True, 30);
+		Global.hero_death_threshold = Workshop Setting Integer(Custom String("General"), Custom String("Hero death threshold"), 2, 1, 10,
+			40);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
-			0.200, 1, 0);
+			0.200, 1, 50);
 		Global.show_damage_dealt_notifications = Workshop Setting Toggle(Custom String("Notifications"), Custom String(
-			"Show damage dealt"), True, 0);
+			"Show damage dealt"), True, 10);
 		Global.show_damage_taken_notifications = Workshop Setting Toggle(Custom String("Notifications"), Custom String(
-			"Show damage taken"), False, 0);
+			"Show damage taken"), False, 20);
+		Global.clear_hud_notifications_interval = Workshop Setting Integer(Custom String("Notifications"), Custom String(
+			"Clear HUD notification interval [seconds]"), 5, 5, 20, 30);
 	}
 }
 
