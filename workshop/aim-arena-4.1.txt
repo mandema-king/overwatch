@@ -180,10 +180,12 @@ rule("PLAYER show help")
 
 	actions
 	{
-		Create HUD Text(Event Player, Custom String("'{0}' emote for Immortality", String("Healing")), Null, Null, Right, 1, Color(Team 1),
-			Color(White), Color(White), String, Default Visibility);
-		Create HUD Text(Event Player, Custom String("'{0}' emote to switch heroes", String("Interact")), Null, Null, Right, 1, Color(
-			Team 1), Color(White), Color(White), String, Default Visibility);
+		Create HUD Text(Event Player, String("Help"), Null, Null, Right, 100, Color(Orange), Color(White), Color(White), String,
+			Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' for immortality", String("Healing")), Right, 110, Color(
+			White), Color(White), Color(Orange), String, Default Visibility);
+		Create HUD Text(Event Player, Null, Null, Custom String("Emote '{0}' to switch heroes", String("Interact")), Right, 120, Color(
+			White), Color(White), Color(Orange), String, Default Visibility);
 	}
 }
 
