@@ -48,7 +48,8 @@ rule("When bot takes damage, start facing attacker and shoot")
 	{
 		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), 400, To World,
 			Direction and Turn Rate);
-		Wait Until(Is In Line of Sight(Eye Position(Event Player), Attacker, Barriers Do Not Block LOS), 99999);
+		Wait Until(Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
+			Attacker, Event Player, True) != Null, 99999);
 		Press Button(Event Player, Button(Primary Fire));
 	}
 }
