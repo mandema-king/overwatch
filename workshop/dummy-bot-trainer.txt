@@ -16,3 +16,16 @@ settings
 		}
 	}
 }
+
+rule("Add bot")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
+	}
+}
