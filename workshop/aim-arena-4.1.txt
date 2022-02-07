@@ -82,6 +82,8 @@ variables
 		7: primary_fire_falloff_range
 		8: current_hero_deaths
 		9: help_text_ids
+		10: strafe_duration_min
+		11: strafe_duration_max
 }
 
 subroutines
@@ -377,6 +379,13 @@ rule("HERO configuration")
 	{
 		Event Player.current_hero = Hero Of(Event Player);
 		Event Player.current_hero_deaths = 0;
+		If(Array Contains(All Damage Heroes, Event Player.current_hero));
+			Event Player.strafe_duration_min = 0.250;
+			Event Player.strafe_duration_max = 1;
+		Else;
+			Event Player.strafe_duration_min = 0.500;
+			Event Player.strafe_duration_max = 2;
+		End;
 		If(Event Player.current_hero == Hero(Ana));
 			Event Player.primary_fire_falloff_range = 100;
 			Event Player.primary_fire_max_range = 100;
@@ -431,6 +440,8 @@ rule("HERO configuration")
 		Else If(Event Player.current_hero == Hero(Pharah));
 			Event Player.primary_fire_falloff_range = 100;
 			Event Player.primary_fire_max_range = 100;
+			Event Player.strafe_duration_min = 1;
+			Event Player.strafe_duration_max = 2;
 		Else If(Event Player.current_hero == Hero(Reaper));
 			Event Player.primary_fire_falloff_range = 10;
 			Event Player.primary_fire_max_range = 20;
@@ -712,11 +723,11 @@ rule("RBOT strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.500, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.500, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop;
@@ -763,11 +774,11 @@ rule("CASSIDY strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop If Condition Is True;
@@ -939,11 +950,11 @@ rule("PHARAH air strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(1, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(1, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop If Condition Is True;
@@ -1134,11 +1145,11 @@ rule("MERCY strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.500, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.500, 2), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop;
@@ -1261,11 +1272,11 @@ rule("ASHE strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop;
@@ -1423,11 +1434,11 @@ rule("GENJI strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(0.250, 1), Ignore Condition);
+		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop If Condition Is True;
