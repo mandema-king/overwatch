@@ -228,7 +228,7 @@ rule("HUD - player info")
 	actions
 	{
 		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, Global.hud_player_info_sort_order, Color(White),
-			Color(White), Color(White), String, Visible Always);
+			Color(White), Color(White), String, Default Visibility);
 		Create HUD Text(Event Player, Null, Null, Custom String("Targeted enemy: {0}", Hero Of(Event Player.last_targeted_enemy)), Left,
 			Global.hud_player_info_sort_order + 10, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Create HUD Text(Event Player, Null, Null, Custom String("Distance to targeted enemy: {0} m",
