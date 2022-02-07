@@ -75,3 +75,26 @@ rule("When bot takes damage, start facing attacker and shoot")
 		Press Button(Event Player, Button(Primary Fire));
 	}
 }
+
+rule("When bot is injured, attack with primary fire")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Normalized Health(Event Player) <= 0.950;
+	}
+
+	actions
+	{
+		Press Button(Event Player, Button(Primary Fire));
+		Wait(0.500, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
