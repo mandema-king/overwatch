@@ -3,6 +3,12 @@ settings
 	modes
 	{
 		Skirmish
+		{
+			enabled maps
+			{
+				Workshop Chamber
+			}
+		}
 
 		General
 		{
