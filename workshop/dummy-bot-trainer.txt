@@ -315,3 +315,32 @@ rule("Bot heal with primary")
 		Start Holding Button(Event Player, Button(Primary Fire));
 	}
 }
+
+rule("When Mei freezes an enemy, switch to secondary fire")
+{
+	event
+	{
+		Player Dealt Damage;
+		All;
+		Mei;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Has Status(Victim, Frozen));
+			If(Is Button Held(Event Player, Button(Primary Fire)));
+				Stop Holding Button(Event Player, Button(Primary Fire));
+				Start Holding Button(Event Player, Button(Secondary Fire));
+			End;
+		Else;
+			If(Is Button Held(Event Player, Button(Secondary Fire)));
+				Stop Holding Button(Event Player, Button(Secondary Fire));
+				Start Holding Button(Event Player, Button(Primary Fire));
+			End;
+	}
+}
