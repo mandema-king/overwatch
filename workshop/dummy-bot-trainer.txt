@@ -107,7 +107,7 @@ rule("When bot is injured, start attacking")
 	}
 }
 
-rule("Bot attack with primary fire")
+rule("When bot starts attacking, start primary attack")
 {
 	event
 	{
