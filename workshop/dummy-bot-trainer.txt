@@ -107,6 +107,27 @@ rule("When bot is injured, start attacking")
 	}
 }
 
+rule("When bot is healed, stop attacking")
+{
+	event
+	{
+		Player Received Healing;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Normalized Health(Event Player) > 0.950;
+	}
+
+	actions
+	{
+		Event Player.bot_is_attacking = False;
+	}
+}
+
 rule("When bot kills player, stop attacking")
 {
 	event
