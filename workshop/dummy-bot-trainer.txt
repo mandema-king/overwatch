@@ -123,6 +123,8 @@ rule("Bot attack with primary fire")
 	{
 		If(Hero Of(Event Player) == Hero(Mei));
 			Start Holding Button(Event Player, Button(Primary Fire));
+		Else If(Hero Of(Event Player) == Hero(Moira));
+			Start Holding Button(Event Player, Button(Secondary Fire));
 		Else;
 			Press Button(Event Player, Button(Primary Fire));
 			Wait(0.500, Ignore Condition);
