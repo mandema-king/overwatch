@@ -56,6 +56,7 @@ rule("Add bots")
 	{
 		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
 		Create Dummy Bot(Hero(Mei), Team 2, -1, Vector(5, 0, 5), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Mercy), Team 2, -1, Vector(-5, 0, -5), Vector(0, 0, 0));
 		Create Dummy Bot(Hero(Moira), Team 2, -1, Vector(0, 0, 5), Vector(0, 0, 0));
 	}
 }
