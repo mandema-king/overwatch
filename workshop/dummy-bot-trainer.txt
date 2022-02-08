@@ -107,6 +107,26 @@ rule("When bot is injured, start attacking")
 	}
 }
 
+rule("When bot kills player, stop attacking")
+{
+	event
+	{
+		Player Dealt Final Blow;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.bot_is_attacking = False;
+	}
+}
+
 rule("When bot starts attacking, start primary attack")
 {
 	event
@@ -133,6 +153,28 @@ rule("When bot starts attacking, start primary attack")
 			Wait(0.500, Ignore Condition);
 			Loop If Condition Is True;
 		End;
+	}
+}
+
+rule("When bot stops attacking, stop all attacks")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_is_attacking == False;
+	}
+
+	actions
+	{
+		Stop Holding Button(Event Player, Button(Primary Fire));
+		Stop Holding Button(Event Player, Button(Secondary Fire));
 	}
 }
 
