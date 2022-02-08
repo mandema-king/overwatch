@@ -168,6 +168,9 @@ rule("When bot starts attacking, start primary attack")
 	{
 		If(Hero Of(Event Player) == Hero(Mei));
 			Start Holding Button(Event Player, Button(Primary Fire));
+		Else If(Hero Of(Event Player) == Hero(Mercy));
+			Set Weapon(Event Player, 2);
+			Start Holding Button(Event Player, Button(Primary Fire));
 		Else If(Hero Of(Event Player) == Hero(Moira));
 			Start Holding Button(Event Player, Button(Secondary Fire));
 		Else;
@@ -197,6 +200,8 @@ rule("When bot stops attacking, stop all attacks")
 	{
 		Stop Holding Button(Event Player, Button(Primary Fire));
 		Stop Holding Button(Event Player, Button(Secondary Fire));
+		If(Hero Of(Event Player) == Hero(Mercy));
+			Set Weapon(Event Player, 1);
 	}
 }
 
