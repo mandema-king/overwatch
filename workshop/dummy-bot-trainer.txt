@@ -22,6 +22,9 @@ variables
 	global:
 		0: bot_turn_rate
 		1: bot_targeting_timeout
+
+	player:
+		0: bot_is_attacking
 }
 
 rule("Global initialize")
@@ -53,7 +56,7 @@ rule("Add bots")
 	}
 }
 
-rule("When bot takes damage, start facing attacker and shoot")
+rule("When bot takes damage, start facing attacker and start attacking")
 {
 	event
 	{
@@ -73,11 +76,11 @@ rule("When bot takes damage, start facing attacker and shoot")
 			Direction and Turn Rate);
 		Wait Until(Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
 			Attacker, Event Player, True) != Null, Global.bot_targeting_timeout);
-		Press Button(Event Player, Button(Primary Fire));
+		Event Player.bot_is_attacking = True;
 	}
 }
 
-rule("When bot is injured, attack with primary fire")
+rule("When bot is injured, start attacking")
 {
 	event
 	{
@@ -96,8 +99,33 @@ rule("When bot is injured, attack with primary fire")
 
 	actions
 	{
-		Press Button(Event Player, Button(Primary Fire));
-		Wait(0.500, Ignore Condition);
-		Loop If Condition Is True;
+		Event Player.bot_is_attacking = True;
+	}
+}
+
+rule("Bot attack with primary fire")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_is_attacking == True;
+	}
+
+	actions
+	{
+		If(Hero Of(Event Player) == Hero(Mei));
+			Start Holding Button(Event Player, Button(Primary Fire));
+		Else;
+			Press Button(Event Player, Button(Primary Fire));
+			Wait(0.500, Ignore Condition);
+			Loop If Condition Is True;
+		End;
 	}
 }
