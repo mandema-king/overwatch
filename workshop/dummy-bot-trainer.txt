@@ -24,7 +24,10 @@ variables
 		1: bot_targeting_timeout
 
 	player:
-		0: bot_is_attacking
+		0: bot_healers
+		1: bot_is_attacking
+		2: bot_is_healing
+		3: bot_teammate_to_heal
 }
 
 rule("Global initialize")
@@ -130,5 +133,116 @@ rule("Bot attack with primary fire")
 			Wait(0.500, Ignore Condition);
 			Loop If Condition Is True;
 		End;
+	}
+}
+
+rule("When player is injured, assign bot healer")
+{
+	event
+	{
+		Player Took Damage;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Normalized Health(Event Player) <= 0.950;
+	}
+
+	actions
+	{
+		Event Player.bot_healers = Filtered Array(All Living Players(Team Of(Event Player)), Is Dummy Bot(Current Array Element)
+			&& Array Contains(All Support Heroes, Hero Of(Current Array Element)));
+		First Of(Event Player.bot_healers).bot_teammate_to_heal = Event Player;
+	}
+}
+
+rule("When player is healed, stop healing")
+{
+	event
+	{
+		Player Dealt Healing;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Normalized Health(Healee) >= 0.950);
+			Event Player.bot_is_healing = False;
+			Event Player.bot_teammate_to_heal = Null;
+	}
+}
+
+rule("Bot start healing teammate")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_teammate_to_heal != Null;
+	}
+
+	actions
+	{
+		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_teammate_to_heal)),
+			Global.bot_turn_rate, To World, Direction and Turn Rate);
+		Wait Until(Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
+			Event Player.bot_teammate_to_heal, Event Player, True) != Null, Global.bot_targeting_timeout);
+		Event Player.bot_is_healing = True;
+	}
+}
+
+rule("Bot stop healing")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_is_healing == False;
+	}
+
+	actions
+	{
+		Stop Holding Button(Event Player, Button(Primary Fire));
+	}
+}
+
+rule("Bot heal with primary")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_is_healing == True;
+	}
+
+	actions
+	{
+		Start Holding Button(Event Player, Button(Primary Fire));
 	}
 }
