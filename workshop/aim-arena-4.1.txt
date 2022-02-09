@@ -71,6 +71,7 @@ variables
 		10: hero_death_threshold
 		11: hud_player_help_sort_order
 		12: hud_player_info_sort_order
+		13: bot_turn_rate
 
 	player:
 		0: hud_notification_text_ids
@@ -138,6 +139,7 @@ rule("GLOBAL initialize")
 		Global.hud_notifications_sort_order = 1000;
 		Global.hud_player_help_sort_order = 200;
 		Global.hud_player_info_sort_order = 100;
+		Global.bot_turn_rate = 400;
 	}
 }
 
@@ -538,7 +540,7 @@ rule("BOT turn and shoot")
 
 	actions
 	{
-		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), 400, To World,
+		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), Global.bot_turn_rate, To World,
 			Direction and Turn Rate);
 		If(Distance Between(Event Player, Attacker) <= Event Player.primary_fire_max_range);
 			Start Holding Button(Event Player, Button(Primary Fire));
