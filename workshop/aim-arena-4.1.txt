@@ -144,7 +144,7 @@ rule("GLOBAL initialize")
 	}
 }
 
-rule("BOT create")
+rule("Fill Team 2 with bots")
 {
 	event
 	{
