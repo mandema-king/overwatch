@@ -36,6 +36,7 @@ settings
 		{
 			disabled heroes
 			{
+				Symmetra
 				Torbjörn
 			}
 		}
