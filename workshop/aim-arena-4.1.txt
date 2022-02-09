@@ -497,7 +497,7 @@ rule("BOT role lock")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -526,7 +526,7 @@ rule("BOT turn and shoot")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -556,7 +556,7 @@ rule("BOT jump")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -581,7 +581,7 @@ rule("BOT crouch")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -610,7 +610,7 @@ rule("BOT death")
 	event
 	{
 		Player Died;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -639,7 +639,7 @@ rule("BOT says hello BM")
 	event
 	{
 		Player Dealt Final Blow;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -666,7 +666,7 @@ rule("RBOT E")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 5;
 	}
 
@@ -687,7 +687,7 @@ rule("RBOT shift")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 5;
 	}
 
@@ -715,7 +715,7 @@ rule("BOT strafe")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -743,7 +743,7 @@ rule("RBOT W")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 5;
 	}
 
@@ -766,7 +766,7 @@ disabled rule("CASSIDY flash")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 0;
 	}
 
@@ -792,7 +792,7 @@ rule("CASSIDY roll")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 0;
 	}
 
@@ -813,7 +813,7 @@ rule("CASSIDY MOIRA dmg")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 0;
 	}
 
@@ -838,7 +838,7 @@ rule("CASSIDY BAPTISTE jump")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 0;
 	}
 
@@ -866,7 +866,7 @@ rule("CASSIDY SYMMETRA dmg")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 0;
 	}
 
@@ -890,7 +890,7 @@ rule("PHARAH take off")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -913,7 +913,7 @@ rule("PHARAH control jets")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -938,7 +938,7 @@ rule("PHARAH thrusters")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -959,7 +959,7 @@ rule("PHARAH shoot")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -983,7 +983,7 @@ rule("PHARAH after rez")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -1004,7 +1004,7 @@ rule("PHARAH mad")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 2;
 	}
 
@@ -1030,7 +1030,7 @@ rule("MERCY stare")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Mercy;
 	}
 
@@ -1052,7 +1052,7 @@ rule("MERCY fly to")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Mercy;
 	}
 
@@ -1080,7 +1080,7 @@ rule("MERCY movement")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Mercy;
 	}
 
@@ -1104,7 +1104,7 @@ rule("MERCY damage boost")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -1130,7 +1130,7 @@ rule("MERCY rez")
 	event
 	{
 		Player Died;
-		Team 2;
+		All;
 		Pharah;
 	}
 
@@ -1158,7 +1158,7 @@ rule("ASHE dynamite")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 3;
 	}
 
@@ -1179,7 +1179,7 @@ rule("ASHE facing")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 3;
 	}
 
@@ -1203,7 +1203,7 @@ rule("RBOT primary fire")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -1231,7 +1231,7 @@ rule("HANZO shoot")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Hanzo;
 	}
 
@@ -1258,7 +1258,7 @@ rule("BOT ultimate")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		All;
 	}
 
@@ -1286,7 +1286,7 @@ rule("GENJI look")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Slot 4;
 	}
 
@@ -1313,7 +1313,7 @@ rule("GENJI deflect")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 4;
 	}
 
@@ -1335,7 +1335,7 @@ rule("GENJI right clicks")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Genji;
 	}
 
@@ -1362,7 +1362,7 @@ rule("GENJI double jump")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 4;
 	}
 
@@ -1387,7 +1387,7 @@ rule("DOOM look")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Doomfist;
 	}
 
@@ -1409,7 +1409,7 @@ rule("DOOM e")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Doomfist;
 	}
 
@@ -1433,7 +1433,7 @@ rule("DOOM shift")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Doomfist;
 	}
 
@@ -1457,7 +1457,7 @@ rule("DOOM punch")
 	event
 	{
 		Ongoing - Each Player;
-		Team 2;
+		All;
 		Slot 4;
 	}
 
@@ -1485,7 +1485,7 @@ rule("DOOM ult")
 	event
 	{
 		Player Took Damage;
-		Team 2;
+		All;
 		Doomfist;
 	}
 
