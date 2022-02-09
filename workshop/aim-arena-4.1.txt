@@ -144,6 +144,32 @@ rule("GLOBAL initialize")
 	}
 }
 
+rule("Fill Team 1 with bots")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+	}
+
+	actions
+	{
+		Create Dummy Bot(Hero(Pharah), Team 1, 1, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Mercy), Team 1, 2, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Ashe), Team 1, 3, Vector(0, 0, 0), Vector(0, 0, 0));
+		If(Global.competitive_mode_enabled);
+			Create Dummy Bot(Hero(Roadhog), Team 1, 4, Vector(0, 0, 0), Vector(0, 0, 0));
+		Else;
+			Create Dummy Bot(Hero(Genji), Team 1, 4, Vector(0, 0, 0), Vector(0, 0, 0));
+		End;
+		Create Dummy Bot(Hero(Cassidy), Team 1, 5, Vector(0, 0, 0), Vector(0, 0, 0));
+	}
+}
+
 rule("Fill Team 2 with bots")
 {
 	event
