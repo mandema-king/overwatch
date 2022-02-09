@@ -68,15 +68,15 @@ variables
 		6: show_damage_dealt_notifications
 		7: show_damage_taken_notifications
 		8: competitive_mode_enabled
-		9: passive_bots_enabled
-		10: hero_death_threshold
+		9: bot_passive_mode_enabled
+		10: bot_hero_death_threshold
 		11: hud_player_help_sort_order
 		12: hud_player_info_sort_order
 		13: bot_turn_rate
 
 	player:
 		0: hud_notification_text_ids
-		1: allowed_heroes
+		1: bot_allowed_heroes
 		3: last_targeted_enemy
 		4: distance_to_targeted_enemy
 		5: current_hero
@@ -84,8 +84,8 @@ variables
 		7: primary_fire_falloff_range
 		8: current_hero_deaths
 		9: help_text_ids
-		10: strafe_duration_min
-		11: strafe_duration_max
+		10: bot_strafe_duration_min
+		11: bot_strafe_duration_max
 }
 
 subroutines
@@ -105,10 +105,10 @@ rule("Workshop settings")
 		Global.match_time = Workshop Setting Integer(Custom String("General"), Custom String("Match time [minutes]"), 15, 1, 30, 10);
 		Global.competitive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String("Competitive mode (i.e. 2-2-2)"),
 			False, 20);
-		Global.passive_bots_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
+		Global.bot_passive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
 			"Passive bots (only attack when injured)"), True, 30);
-		Global.hero_death_threshold = Workshop Setting Integer(Custom String("General"), Custom String("Hero death threshold"), 2, 1, 10,
-			40);
+		Global.bot_hero_death_threshold = Workshop Setting Integer(Custom String("General"), Custom String("Hero death threshold"), 2, 1,
+			10, 40);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
 			0.200, 1, 50);
 		Global.show_damage_dealt_notifications = Workshop Setting Toggle(Custom String("HUD - Notifications"), Custom String(
@@ -271,7 +271,7 @@ rule("HUD - show help")
 		Create HUD Text(Event Player, String("Help"), Null, Null, Right, Global.hud_player_help_sort_order, Color(Orange), Color(White),
 			Color(White), String, Default Visibility);
 		Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
-		If(Global.passive_bots_enabled);
+		If(Global.bot_passive_mode_enabled);
 			Create HUD Text(Event Player, Null, Null, Custom String("Enemy team only attacks when injured"), Right,
 				Global.hud_player_help_sort_order + 10, Color(White), Color(White), Color(Orange), String, Default Visibility);
 			Modify Player Variable(Event Player, help_text_ids, Append To Array, Last Text ID);
@@ -383,11 +383,11 @@ rule("HERO configuration")
 		Event Player.current_hero = Hero Of(Event Player);
 		Event Player.current_hero_deaths = 0;
 		If(Array Contains(All Damage Heroes, Event Player.current_hero));
-			Event Player.strafe_duration_min = 0.250;
-			Event Player.strafe_duration_max = 1;
+			Event Player.bot_strafe_duration_min = 0.250;
+			Event Player.bot_strafe_duration_max = 1;
 		Else;
-			Event Player.strafe_duration_min = 0.500;
-			Event Player.strafe_duration_max = 2;
+			Event Player.bot_strafe_duration_min = 0.500;
+			Event Player.bot_strafe_duration_max = 2;
 		End;
 		If(Event Player.current_hero == Hero(Ana));
 			Event Player.primary_fire_falloff_range = 100;
@@ -443,8 +443,8 @@ rule("HERO configuration")
 		Else If(Event Player.current_hero == Hero(Pharah));
 			Event Player.primary_fire_falloff_range = 100;
 			Event Player.primary_fire_max_range = 100;
-			Event Player.strafe_duration_min = 1;
-			Event Player.strafe_duration_max = 2;
+			Event Player.bot_strafe_duration_min = 1;
+			Event Player.bot_strafe_duration_max = 2;
 		Else If(Event Player.current_hero == Hero(Reaper));
 			Event Player.primary_fire_falloff_range = 10;
 			Event Player.primary_fire_max_range = 20;
@@ -510,13 +510,14 @@ rule("BOT role lock")
 	actions
 	{
 		If(Array Contains(All Damage Heroes, Hero Of(Event Player)));
-			Event Player.allowed_heroes = Filtered Array(All Damage Heroes, Array Contains(Allowed Heroes(Event Player),
+			Event Player.bot_allowed_heroes = Filtered Array(All Damage Heroes, Array Contains(Allowed Heroes(Event Player),
 				Current Array Element));
 		Else If(Array Contains(All Support Heroes, Hero Of(Event Player)));
-			Event Player.allowed_heroes = Filtered Array(All Support Heroes, Array Contains(Allowed Heroes(Event Player),
+			Event Player.bot_allowed_heroes = Filtered Array(All Support Heroes, Array Contains(Allowed Heroes(Event Player),
 				Current Array Element));
 		Else;
-			Event Player.allowed_heroes = Filtered Array(All Tank Heroes, Array Contains(Allowed Heroes(Event Player), Current Array Element));
+			Event Player.bot_allowed_heroes = Filtered Array(All Tank Heroes, Array Contains(Allowed Heroes(Event Player),
+				Current Array Element));
 	}
 }
 
@@ -628,8 +629,8 @@ rule("BOT death")
 		Wait(Global.death_animation_time, Ignore Condition);
 		Teleport(Event Player, Vector(0, 0, 0));
 		If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Pharah));
-			If(Event Player.current_hero_deaths >= Global.hero_death_threshold);
-				Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.allowed_heroes));
+			If(Event Player.current_hero_deaths >= Global.bot_hero_death_threshold);
+				Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.bot_allowed_heroes));
 	}
 }
 
@@ -726,11 +727,11 @@ rule("BOT strafe")
 	actions
 	{
 		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
-		Wait(Random Real(Event Player.strafe_duration_min, Event Player.strafe_duration_max), Ignore Condition);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
 		Stop Throttle In Direction(Event Player);
 		Wait(0.050, Ignore Condition);
 		Loop If Condition Is True;
@@ -1210,7 +1211,7 @@ rule("RBOT primary fire")
 	{
 		Is Dummy Bot(Event Player) == True;
 		Hero Of(Event Player) != Hero(Hanzo);
-		(Global.passive_bots_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
+		(Global.bot_passive_mode_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
 			Event Player, True) == True;
 		Distance Between(Event Player, Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player))))
@@ -1267,7 +1268,7 @@ rule("BOT ultimate")
 		Hero Of(Event Player) != Hero(Doomfist);
 		Hero Of(Event Player) != Hero(Mercy);
 		Ultimate Charge Percent(Event Player) == 100;
-		(Global.passive_bots_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
+		(Global.bot_passive_mode_enabled == False || Normalized Health(Event Player) <= 0.950) == True;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Closest Player To(Event Player, Team 1)), All Living Players(Team 1),
 			Event Player, True) == True;
 	}
