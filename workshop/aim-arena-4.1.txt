@@ -59,33 +59,33 @@ settings
 variables
 {
 	global:
-		0: game_name
-		1: match_time
-		2: hud_clear_notifications_interval
-		3: hud_notifications_sort_order
+		0: bot_hero_death_threshold
+		1: bot_passive_mode_enabled
+		2: bot_turn_rate
+		3: competitive_mode_enabled
 		4: death_animation_time
-		5: targeting_interval
-		6: show_damage_dealt_notifications
-		7: show_damage_taken_notifications
-		8: competitive_mode_enabled
-		9: bot_passive_mode_enabled
-		10: bot_hero_death_threshold
-		11: hud_player_help_sort_order
-		12: hud_player_info_sort_order
-		13: bot_turn_rate
+		5: game_name
+		6: hud_clear_notifications_interval
+		7: hud_notifications_sort_order
+		8: hud_player_help_sort_order
+		9: hud_player_info_sort_order
+		10: match_time
+		11: show_damage_dealt_notifications
+		12: show_damage_taken_notifications
+		13: targeting_interval
 
 	player:
-		0: hud_notification_text_ids
-		1: bot_allowed_heroes
-		3: last_targeted_enemy
-		4: distance_to_targeted_enemy
-		5: current_hero
-		6: primary_fire_max_range
-		7: primary_fire_falloff_range
-		8: current_hero_deaths
-		9: help_text_ids
-		10: bot_strafe_duration_min
-		11: bot_strafe_duration_max
+		0: bot_allowed_heroes
+		1: bot_strafe_duration_max
+		2: bot_strafe_duration_min
+		3: current_hero
+		4: current_hero_deaths
+		5: distance_to_targeted_enemy
+		6: help_text_ids
+		7: hud_notification_text_ids
+		8: last_targeted_enemy
+		9: primary_fire_falloff_range
+		10: primary_fire_max_range
 }
 
 subroutines
