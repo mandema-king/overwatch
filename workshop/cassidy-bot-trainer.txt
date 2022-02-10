@@ -106,7 +106,6 @@ rule("When bot is not passive or is injured, attack with primary fire")
 		(!Global.bot_passive_mode_enabled || Normalized Health(Event Player) <= 0.950) == True;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
 			All Living Players(Opposite Team Of(Team Of(Event Player))), Event Player, True) != Null;
-		Is Game In Progress == True;
 	}
 
 	actions
