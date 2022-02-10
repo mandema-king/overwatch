@@ -23,6 +23,10 @@ variables
 		0: bot_turn_rate
 		1: bot_targeting_timeout
 		2: bot_passive_mode_enabled
+
+	player:
+		0: bot_strafe_duration_max
+		1: bot_strafe_duration_min
 }
 
 rule("Workshop settings")
@@ -64,6 +68,56 @@ rule("Add bot")
 	actions
 	{
 		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
+	}
+}
+
+rule("Initialize bot variables")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.bot_strafe_duration_min = 0.250;
+		Event Player.bot_strafe_duration_max = 1;
+	}
+}
+
+rule("When bot has spawned, strafe randomly left and right")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
+		Stop Throttle In Direction(Event Player);
+		Wait(0.050, Ignore Condition);
+		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
+		Stop Throttle In Direction(Event Player);
+		Wait(0.050, Ignore Condition);
+		Loop If Condition Is True;
 	}
 }
 
