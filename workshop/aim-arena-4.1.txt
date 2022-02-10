@@ -1121,13 +1121,12 @@ rule("GENJI look")
 	{
 		Player Took Damage;
 		All;
-		Slot 4;
+		Genji;
 	}
 
 	conditions
 	{
 		Is Dummy Bot(Event Player) == True;
-		Hero Of(Event Player) == Hero(Genji);
 	}
 
 	actions
@@ -1148,14 +1147,13 @@ rule("GENJI deflect")
 	{
 		Ongoing - Each Player;
 		All;
-		Slot 4;
+		Genji;
 	}
 
 	conditions
 	{
 		Is Dummy Bot(Event Player) == True;
 		Normalized Health(Event Player) <= 0.500;
-		Hero Of(Event Player) == Hero(Genji);
 	}
 
 	actions
@@ -1177,7 +1175,6 @@ rule("GENJI right clicks")
 	{
 		Is Dummy Bot(Event Player) == True;
 		Distance Between(Event Player, Attacker) <= 8;
-		Hero Of(Event Player) == Hero(Genji);
 	}
 
 	actions
@@ -1197,13 +1194,12 @@ rule("GENJI double jump")
 	{
 		Ongoing - Each Player;
 		All;
-		Slot 4;
+		Genji;
 	}
 
 	conditions
 	{
 		Is Dummy Bot(Event Player) == True;
-		Hero Of(Event Player) == Hero(Genji);
 	}
 
 	actions
