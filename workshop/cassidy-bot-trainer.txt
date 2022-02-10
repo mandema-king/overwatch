@@ -1,0 +1,25 @@
+settings
+{
+	modes
+	{
+		Assault
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+
+		Control
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+
+		Escort
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+
+		Hybrid
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+	}
+}
