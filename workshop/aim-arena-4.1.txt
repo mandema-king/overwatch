@@ -601,7 +601,7 @@ disabled rule("CASSIDY flash")
 	{
 		Player Took Damage;
 		All;
-		Slot 0;
+		Cassidy;
 	}
 
 	conditions
@@ -627,7 +627,7 @@ rule("CASSIDY roll")
 	{
 		Player Took Damage;
 		All;
-		Slot 0;
+		Cassidy;
 	}
 
 	conditions
