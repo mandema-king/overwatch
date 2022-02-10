@@ -21,6 +21,7 @@ variables
 {
 	global:
 		0: bot_turn_rate
+		1: bot_targeting_timeout
 }
 
 rule("Global initialize")
@@ -33,6 +34,8 @@ rule("Global initialize")
 	actions
 	{
 		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 10);
+		Global.bot_targeting_timeout = Workshop Setting Real(Custom String("General"), Custom String("Bot targeting timeout [seconds]"), 1,
+			0.500, 1, 20);
 	}
 }
 
@@ -68,7 +71,7 @@ rule("When bot takes damage, start facing attacker and shoot")
 		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), Global.bot_turn_rate, To World,
 			Direction and Turn Rate);
 		Wait Until(Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
-			Attacker, Event Player, True) != Null, 99999);
+			Attacker, Event Player, True) != Null, Global.bot_targeting_timeout);
 		Press Button(Event Player, Button(Primary Fire));
 	}
 }
