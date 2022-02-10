@@ -993,7 +993,7 @@ rule("ASHE dynamite")
 	{
 		Ongoing - Each Player;
 		All;
-		Slot 3;
+		Ashe;
 	}
 
 	conditions
@@ -1014,7 +1014,7 @@ rule("ASHE facing")
 	{
 		Player Took Damage;
 		All;
-		Slot 3;
+		Ashe;
 	}
 
 	conditions
