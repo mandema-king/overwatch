@@ -29,3 +29,27 @@ rule("Add bot")
 		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
 	}
 }
+
+rule("When bot takes damage, start facing attacker and shoot")
+{
+	event
+	{
+		Player Took Damage;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Attacker)), 400, To World,
+			Direction and Turn Rate);
+		Wait Until(Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player) * 100,
+			Attacker, Event Player, True) != Null, 99999);
+		Press Button(Event Player, Button(Primary Fire));
+	}
+}
