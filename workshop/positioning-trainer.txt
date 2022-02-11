@@ -100,10 +100,10 @@ rule("When bot has spawned, move to preferred position")
 	{
 		Start Throttle In Direction(Event Player, Direction Towards(Position Of(Event Player), Event Player.bot_preferred_position), 1,
 			To World, Replace existing throttle, Direction and Magnitude);
-		Wait(1, Ignore Condition);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
 		Start Throttle In Direction(Event Player, Direction Towards(Event Player.bot_preferred_position, Position Of(Event Player)), 1,
 			To World, Replace existing throttle, Direction and Magnitude);
-		Wait(0.250, Ignore Condition);
+		Wait(Random Real(Event Player.bot_strafe_duration_min / 4, Event Player.bot_strafe_duration_max / 4), Ignore Condition);
 		Loop If Condition Is True;
 	}
 }
