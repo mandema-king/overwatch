@@ -22,9 +22,13 @@ variables
 	global:
 		0: team_1_spawn_location
 		1: team_2_spawn_location
+
+	player:
+		0: bot_preferred_position
+		1: bot_preferred_position_reached
 }
 
-rule("Initialize")
+rule("Initialize global variables")
 {
 	event
 	{
@@ -51,6 +55,27 @@ rule("Add bot")
 	}
 }
 
+rule("Initialize bot")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.bot_preferred_position = Vector(0, 0, 0);
+		Event Player.bot_preferred_position_reached = False;
+	}
+}
+
 rule("When 'interact' button is pressed, create text to show current position")
 {
 	event
@@ -69,5 +94,50 @@ rule("When 'interact' button is pressed, create text to show current position")
 	{
 		Create In-World Text(All Players(All Teams), Custom String("{0}", Position Of(Event Player)), Position Of(Event Player), 1,
 			Clip Against Surfaces, None, Color(Green), Default Visibility);
+	}
+}
+
+rule("When bot has spawned, move to preferred position")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.bot_preferred_position_reached == False;
+	}
+
+	actions
+	{
+		Start Throttle In Direction(Event Player, Direction Towards(Position Of(Event Player), Event Player.bot_preferred_position), 1,
+			To World, Replace existing throttle, Direction and Magnitude);
+	}
+}
+
+rule("When bot reaches preferred position, stop moving")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+		Distance Between(Position Of(Event Player), Event Player.bot_preferred_position) <= 0.250;
+	}
+
+	actions
+	{
+		Stop Throttle In Direction(Event Player);
 	}
 }
