@@ -29,3 +29,24 @@ rule("Add bot")
 		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
 	}
 }
+
+rule("When 'interact' button is pressed, create text to show current position")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Interact)) == True;
+	}
+
+	actions
+	{
+		Create In-World Text(All Players(All Teams), Custom String("{0}", Position Of(Event Player)), Position Of(Event Player), 1,
+			Clip Against Surfaces, None, Color(Green), Default Visibility);
+	}
+}
