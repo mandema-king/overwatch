@@ -17,6 +17,27 @@ settings
 	}
 }
 
+variables
+{
+	global:
+		0: team_1_spawn_location
+		1: team_2_spawn_location
+}
+
+rule("Initialize")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.team_1_spawn_location = Vector(15, 0, 0);
+		Global.team_2_spawn_location = Vector(-15, 0, 0);
+	}
+}
+
 rule("Add bot")
 {
 	event
@@ -26,7 +47,7 @@ rule("Add bot")
 
 	actions
 	{
-		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Vector(0, 0, 0), Vector(0, 0, 0));
+		Create Dummy Bot(Hero(Cassidy), Team 2, -1, Global.team_2_spawn_location, Vector(0, 0, 0));
 	}
 }
 
