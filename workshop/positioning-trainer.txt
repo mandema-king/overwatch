@@ -71,7 +71,7 @@ rule("Initialize bot")
 
 	actions
 	{
-		Event Player.bot_preferred_position = Vector(0, 0, 0);
+		Event Player.bot_preferred_position = Vector(-15.700, 0, 15.700);
 		Event Player.bot_preferred_position_reached = False;
 	}
 }
