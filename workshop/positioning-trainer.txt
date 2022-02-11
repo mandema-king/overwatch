@@ -139,5 +139,26 @@ rule("When bot reaches preferred position, stop moving")
 	actions
 	{
 		Stop Throttle In Direction(Event Player);
+		Event Player.bot_preferred_position_reached = True;
+	}
+}
+
+rule("When bot dies, move to preferred position (after spawning)")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Event Player.bot_preferred_position_reached = False;
 	}
 }
