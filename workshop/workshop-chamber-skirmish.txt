@@ -20,8 +20,10 @@ settings
 variables
 {
 	global:
-		0: team_1_spawn_positions
-		1: team_2_spawn_positions
+		0: team_1_spawn_direction
+		1: team_2_spawn_direction
+		2: team_1_spawn_positions
+		3: team_2_spawn_positions
 }
 
 rule("Initialize global variables")
@@ -33,6 +35,8 @@ rule("Initialize global variables")
 
 	actions
 	{
+		Global.team_1_spawn_direction = Vector(-1, 0, 0);
+		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
 		Global.team_1_spawn_positions[1] = Vector(15, 0, -1);
 		Global.team_1_spawn_positions[2] = Vector(15, 0, 1);
@@ -68,5 +72,34 @@ disabled rule("When player has spawned, initialize team spawn positions")
 			Global.team_1_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
 		Else If(Team Of(Event Player) == Team 2);
 			Global.team_2_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+	}
+}
+
+rule("Create bots")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Count Of(Global.team_2_spawn_positions) == Number Of Slots(Team 2);
+	}
+
+	actions
+	{
+		Create Dummy Bot(Hero(Ana), Team 1, 0, Global.team_1_spawn_positions[0], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(D.Va), Team 1, 1, Global.team_1_spawn_positions[1], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Orisa), Team 1, 2, Global.team_1_spawn_positions[2], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Cassidy), Team 1, 3, Global.team_1_spawn_positions[3], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Ashe), Team 1, 4, Global.team_1_spawn_positions[4], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Baptiste), Team 1, 5, Global.team_1_spawn_positions[5], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Ana), Team 2, 0, Global.team_2_spawn_positions[0], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(D.Va), Team 2, 1, Global.team_2_spawn_positions[1], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Orisa), Team 2, 2, Global.team_2_spawn_positions[2], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Cassidy), Team 2, 3, Global.team_2_spawn_positions[3], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Ashe), Team 2, 4, Global.team_2_spawn_positions[4], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Baptiste), Team 2, 5, Global.team_2_spawn_positions[5], Global.team_2_spawn_direction);
 	}
 }
