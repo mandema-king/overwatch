@@ -24,6 +24,7 @@ variables
 		1: team_2_spawn_direction
 		2: team_1_spawn_positions
 		3: team_2_spawn_positions
+		4: game_name
 }
 
 rule("Initialize global variables")
@@ -35,6 +36,7 @@ rule("Initialize global variables")
 
 	actions
 	{
+		Global.game_name = Custom String("Workshop Chamber - Skirmish");
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
 		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
@@ -101,5 +103,19 @@ rule("Create bots")
 		Create Dummy Bot(Hero(Cassidy), Team 2, 3, Global.team_2_spawn_positions[3], Global.team_2_spawn_direction);
 		Create Dummy Bot(Hero(Ashe), Team 2, 4, Global.team_2_spawn_positions[4], Global.team_2_spawn_direction);
 		Create Dummy Bot(Hero(Baptiste), Team 2, 5, Global.team_2_spawn_positions[5], Global.team_2_spawn_direction);
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White), String,
+			Visible Always);
 	}
 }
