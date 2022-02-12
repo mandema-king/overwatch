@@ -1,0 +1,180 @@
+settings
+{
+	modes
+	{
+		Skirmish
+		{
+			enabled maps
+			{
+				Workshop Chamber
+			}
+		}
+
+		General
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+	}
+}
+
+variables
+{
+	global:
+		0: game_name
+		1: team_1_spawn_direction
+		2: team_2_spawn_direction
+		3: team_1_spawn_positions
+		4: team_2_spawn_positions
+}
+
+rule("Initialize global variables")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.game_name = Custom String("Targeting Bot Trainer");
+		Global.team_1_spawn_direction = Vector(-1, 0, 0);
+		Global.team_2_spawn_direction = Vector(1, 0, 0);
+		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
+		Global.team_1_spawn_positions[1] = Vector(15, 0, -1);
+		Global.team_1_spawn_positions[2] = Vector(15, 0, 1);
+		Global.team_1_spawn_positions[3] = Vector(16, 0, 0);
+		Global.team_1_spawn_positions[4] = Vector(16, 0, -1);
+		Global.team_1_spawn_positions[5] = Vector(16, 0, 1);
+		Global.team_2_spawn_positions[0] = Vector(-15, 0, 0);
+		Global.team_2_spawn_positions[1] = Vector(-15, 0, -1);
+		Global.team_2_spawn_positions[2] = Vector(-15, 0, 1);
+		Global.team_2_spawn_positions[3] = Vector(-16, 0, 0);
+		Global.team_2_spawn_positions[4] = Vector(-16, 0, -1);
+		Global.team_2_spawn_positions[5] = Vector(-16, 0, 1);
+	}
+}
+
+disabled rule("When player has spawned, initialize team spawn positions")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Team Of(Event Player) == Team 1);
+			Global.team_1_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+		Else If(Team Of(Event Player) == Team 2);
+			Global.team_2_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+	}
+}
+
+rule("Create bots")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create Dummy Bot(Hero(Cassidy), Team 2, 0, Global.team_2_spawn_positions[0], Global.team_2_spawn_direction);
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To and String, Visible Always);
+	}
+}
+
+rule("HUD - scoreboard spacing")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+	}
+}
+
+rule("HUD - Team 1 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Left, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("HUD - Team 2 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
