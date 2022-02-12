@@ -115,8 +115,8 @@ rule("HUD - game name")
 
 	actions
 	{
-		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White), String,
-			Visible Always);
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To and String, Visible Always);
 	}
 }
 
