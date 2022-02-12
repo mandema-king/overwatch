@@ -119,3 +119,78 @@ rule("HUD - game name")
 			Visible Always);
 	}
 }
+
+rule("HUD - scoreboard spacing")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
+			String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
+			White), String, Visible Always);
+	}
+}
+
+rule("HUD - Team 1 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Left, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("HUD - Team 2 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
