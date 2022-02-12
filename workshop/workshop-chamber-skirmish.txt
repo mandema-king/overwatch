@@ -176,7 +176,7 @@ rule("HUD - Team 2 scoreboard")
 	event
 	{
 		Ongoing - Each Player;
-		Team 1;
+		Team 2;
 		All;
 	}
 
