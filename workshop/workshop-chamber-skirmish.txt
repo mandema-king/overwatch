@@ -77,7 +77,7 @@ disabled rule("When player has spawned, initialize team spawn positions")
 	}
 }
 
-rule("Create bots")
+disabled rule("Create bots")
 {
 	event
 	{
