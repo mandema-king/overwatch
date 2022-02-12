@@ -16,3 +16,33 @@ settings
 		}
 	}
 }
+
+variables
+{
+	global:
+		0: team_1_spawn_positions
+		1: team_2_spawn_positions
+}
+
+rule("When player has spawned, initialize team spawn positions")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Team Of(Event Player) == Team 1);
+			Global.team_1_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+		Else If(Team Of(Event Player) == Team 2);
+			Global.team_2_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+	}
+}
