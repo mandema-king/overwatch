@@ -24,7 +24,31 @@ variables
 		1: team_2_spawn_positions
 }
 
-rule("When player has spawned, initialize team spawn positions")
+rule("Initialize global variables")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
+		Global.team_1_spawn_positions[1] = Vector(15, 0, -1);
+		Global.team_1_spawn_positions[2] = Vector(15, 0, 1);
+		Global.team_1_spawn_positions[3] = Vector(16, 0, 0);
+		Global.team_1_spawn_positions[4] = Vector(16, 0, -1);
+		Global.team_1_spawn_positions[5] = Vector(16, 0, 1);
+		Global.team_2_spawn_positions[0] = Vector(-15, 0, 0);
+		Global.team_2_spawn_positions[1] = Vector(-15, 0, -1);
+		Global.team_2_spawn_positions[2] = Vector(-15, 0, 1);
+		Global.team_2_spawn_positions[3] = Vector(-16, 0, 0);
+		Global.team_2_spawn_positions[4] = Vector(-16, 0, -1);
+		Global.team_2_spawn_positions[5] = Vector(-16, 0, 1);
+	}
+}
+
+disabled rule("When player has spawned, initialize team spawn positions")
 {
 	event
 	{
