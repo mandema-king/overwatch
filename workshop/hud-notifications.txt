@@ -16,3 +16,203 @@ settings
 		}
 	}
 }
+
+variables
+{
+	global:
+		0: hud_clear_notifications_interval
+		1: hud_notifications_sort_order
+
+	player:
+		0: hud_notification_text_ids
+}
+
+subroutines
+{
+	0: AddLastHudTextIdToNotifications
+}
+
+rule("Workshop settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.hud_clear_notifications_interval = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
+			"Clear notifications interval [seconds]"), 10, 5, 20, 10);
+	}
+}
+
+rule("Initialize global variables")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+	}
+
+	actions
+	{
+		Global.hud_notifications_sort_order = 1000;
+	}
+}
+
+rule("When player has spawned, show sample notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Sample notification #1"), Left, Global.hud_notifications_sort_order,
+			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+		Create HUD Text(Event Player, Null, Null, Custom String("Sample notification #2"), Left, Global.hud_notifications_sort_order,
+			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+		Create HUD Text(Event Player, Null, Null, Custom String("Sample warning #1"), Left, Global.hud_notifications_sort_order, Color(
+			White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+		Create HUD Text(Event Player, Null, Null, Custom String("Sample notification #3"), Left, Global.hud_notifications_sort_order,
+			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("When player holds primary fire button, show sample notification")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Primary Fire)) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Holding primary fire button"), Left, Global.hud_notifications_sort_order,
+			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("When player holds secondary fire button, show sample notification")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Secondary Fire)) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Holding secondary fire button"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("When player holds melee button, show sample notification")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Melee)) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Holding melee button"), Left, Global.hud_notifications_sort_order, Color(
+			White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("When player holds reload button, show sample notification")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Button(Reload)) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Holding reload button"), Left, Global.hud_notifications_sort_order, Color(
+			White), Color(White), Color(White), Visible To and String, Default Visibility);
+		Call Subroutine(AddLastHudTextIdToNotifications);
+	}
+}
+
+rule("Add last HUD Text ID to player notification array")
+{
+	event
+	{
+		Subroutine;
+		AddLastHudTextIdToNotifications;
+	}
+
+	actions
+	{
+		Modify Player Variable(Event Player, hud_notification_text_ids, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove HUD notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.hud_notification_text_ids));
+			Destroy HUD Text(Event Player.hud_notification_text_ids[0]);
+			Modify Player Variable(Event Player, hud_notification_text_ids, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_clear_notifications_interval, Ignore Condition);
+		Loop;
+	}
+}
