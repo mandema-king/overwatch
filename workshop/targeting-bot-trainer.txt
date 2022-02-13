@@ -26,6 +26,7 @@ variables
 		3: team_1_spawn_positions
 		4: team_2_spawn_positions
 		5: targeting_interval
+		6: bot_turn_rate
 
 	player:
 		0: bot_targeted_enemy
@@ -40,6 +41,7 @@ rule("Workshop settings")
 
 	actions
 	{
+		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 20);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
 			0.200, 1, 10);
 	}
@@ -126,6 +128,29 @@ rule("When bot has spawned, begin targeting enemy")
 		Event Player.bot_targeted_enemy = Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player)));
 		Wait(Global.targeting_interval, Ignore Condition);
 		Loop If Condition Is True;
+	}
+}
+
+rule("When bot has targeted enemy, start facing target")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.bot_targeted_enemy != Null;
+	}
+
+	actions
+	{
+		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_targeted_enemy)),
+			Global.bot_turn_rate, To World, Direction and Turn Rate);
 	}
 }
 
