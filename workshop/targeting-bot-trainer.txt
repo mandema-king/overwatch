@@ -215,6 +215,31 @@ rule("When bot ray cast hits enemy, fire weapon")
 	}
 }
 
+rule("When bot kills targeted enemy, stop targeting")
+{
+	event
+	{
+		Player Dealt Final Blow;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Event Player.bot_targeted_enemy == Victim;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} dealt final blow to targeted enemy ({2})", Hero Icon String(Hero Of(Event Player)),
+			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Victim), Left, Global.hud_notifications_sort_order, Color(
+			White), Color(White), Color(White), Visible To and String, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Event Player.bot_targeted_enemy = Null;
+	}
+}
+
 rule("When bot sees no living enemies, reload weapon")
 {
 	event
