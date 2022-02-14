@@ -145,6 +145,7 @@ rule("When bot has spawned, begin targeting enemy")
 	{
 		Is Dummy Bot(Event Player) == True;
 		Has Spawned(Event Player) == True;
+		Is Alive(Event Player) == True;
 		Event Player.bot_targeted_enemy == Null;
 	}
 
