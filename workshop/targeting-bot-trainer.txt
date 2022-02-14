@@ -51,11 +51,11 @@ rule("Workshop settings")
 
 	actions
 	{
-		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 20);
+		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 10);
+		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
+			0.200, 1, 20);
 		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
 			"Notification duration [seconds]"), 5, 5, 20, 10);
-		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
-			0.200, 1, 10);
 	}
 }
 
