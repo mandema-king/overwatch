@@ -108,7 +108,7 @@ disabled rule("Create bots")
 	}
 }
 
-rule("When all players on Team 1 are dead, increment \"team kills\" for Team 2")
+rule("When all players on a team are dead, increment \"team kills\" for other team")
 {
 	event
 	{
@@ -118,35 +118,20 @@ rule("When all players on Team 1 are dead, increment \"team kills\" for Team 2")
 	conditions
 	{
 		Is Game In Progress == True;
-		Is True For Any(All Players(Team 1), Has Spawned(Current Array Element)) == True;
-		Count Of(All Living Players(Team 1)) == 0;
+		(Is True For Any(All Players(Team 1), Has Spawned(Current Array Element)) && Is True For Any(All Players(Team 2), Has Spawned(
+			Current Array Element))) == True;
+		(Count Of(All Living Players(Team 1)) == 0 || Count Of(All Living Players(Team 2)) == 0) == True;
 	}
 
 	actions
 	{
-		Global.entire_team_kills[1] += 1;
 		Big Message(All Players(All Teams), Custom String("Team kill"));
-	}
-}
-
-rule("When all players on Team 2 are dead, increment \"team kills\" for Team 1")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Is Game In Progress == True;
-		Is True For Any(All Players(Team 2), Has Spawned(Current Array Element)) == True;
-		Count Of(All Living Players(Team 2)) == 0;
-	}
-
-	actions
-	{
-		Global.entire_team_kills[0] += 1;
-		Big Message(All Players(All Teams), Custom String("Team kill"));
+		If(Count Of(All Living Players(Team 1)) == 0);
+			Global.entire_team_kills[1] += 1;
+		End;
+		If(Count Of(All Living Players(Team 2)) == 0);
+			Global.entire_team_kills[0] += 1;
+		End;
 	}
 }
 
