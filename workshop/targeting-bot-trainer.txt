@@ -189,6 +189,32 @@ rule("When bot has targeted enemy, start facing target")
 	}
 }
 
+rule("When bot has no targeted enemy, stop facing target")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+		Event Player.bot_targeted_enemy == Null;
+	}
+
+	actions
+	{
+		Stop Facing(Event Player);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} has no targeted enemy", Hero Icon String(Hero Of(Event Player)),
+			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order, Color(White),
+			Color(White), Color(White), Visible To and String, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+	}
+}
+
 rule("When bot ray cast hits enemy, fire weapon")
 {
 	event
@@ -232,9 +258,9 @@ rule("When bot kills targeted enemy, stop targeting")
 
 	actions
 	{
-		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} dealt final blow to targeted enemy ({2})", Hero Icon String(Hero Of(Event Player)),
-			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Victim), Left, Global.hud_notifications_sort_order, Color(
-			White), Color(White), Color(White), Visible To and String, Visible Always);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} dealt final blow to targeted enemy ({2})", Hero Icon String(
+			Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Victim), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
 		Call Subroutine(AddLastTextToPlayerNotifications);
 		Event Player.bot_targeted_enemy = Null;
 	}
