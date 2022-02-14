@@ -151,6 +151,12 @@ rule("When bot has spawned, begin targeting enemy")
 	actions
 	{
 		Event Player.bot_targeted_enemy = Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player)));
+		If(Is Dead(Event Player.bot_targeted_enemy));
+			Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} is targeting a dead player ({2})", Hero Icon String(Hero Of(
+				Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Visible Always);
+			Call Subroutine(AddLastTextToPlayerNotifications);
+		End;
 		If(Event Player.bot_targeted_enemy);
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(Event Player)),
 				String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
