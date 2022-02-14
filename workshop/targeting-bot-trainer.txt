@@ -154,13 +154,13 @@ rule("When bot has spawned, begin targeting enemy")
 		If(Is Dead(Event Player.bot_targeted_enemy));
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} is targeting a dead player ({2})", Hero Icon String(Hero Of(
 				Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
-				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Visible Always);
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
 			Call Subroutine(AddLastTextToPlayerNotifications);
 		End;
 		If(Event Player.bot_targeted_enemy);
 			Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(Event Player)),
 				String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
-				Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
 			Call Subroutine(AddLastTextToPlayerNotifications);
 		End;
 		Wait(Global.targeting_interval, Ignore Condition);
@@ -190,7 +190,7 @@ rule("When bot has targeted enemy, start facing target")
 			Global.bot_turn_rate, To World, Direction and Turn Rate);
 		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} has started facing {2}", Hero Icon String(Hero Of(Event Player)),
 			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
-			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
 		Call Subroutine(AddLastTextToPlayerNotifications);
 	}
 }
@@ -216,7 +216,7 @@ rule("When bot has no targeted enemy, stop facing target")
 		Stop Facing(Event Player);
 		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} has no targeted enemy", Hero Icon String(Hero Of(Event Player)),
 			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order, Color(White),
-			Color(White), Color(White), Visible To and String, Visible Always);
+			Color(White), Color(White), None, Visible Always);
 		Call Subroutine(AddLastTextToPlayerNotifications);
 	}
 }
@@ -266,7 +266,7 @@ rule("When bot kills targeted enemy, stop targeting")
 	{
 		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} dealt final blow to targeted enemy ({2})", Hero Icon String(
 			Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Victim), Left,
-			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
 		Call Subroutine(AddLastTextToPlayerNotifications);
 		Event Player.bot_targeted_enemy = Null;
 	}
@@ -294,7 +294,7 @@ rule("When bot sees no living enemies, reload weapon")
 	{
 		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} sees no enemies...reloading weapon", Hero Icon String(Hero Of(
 			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order,
-			Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+			Color(White), Color(White), Color(White), None, Visible Always);
 		Call Subroutine(AddLastTextToPlayerNotifications);
 		Press Button(Event Player, Button(Reload));
 		Wait(1, Ignore Condition);
