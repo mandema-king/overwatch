@@ -384,6 +384,20 @@ rule("HUD - Team 2 scoreboard")
 	}
 }
 
+rule("HUD - notifications spacing")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left,
+			Global.hud_notifications_sort_order - 1, Color(White), Color(White), Color(White), None, Visible Always);
+	}
+}
+
 rule("Add last text (with expiration time) to player HUD notifications")
 {
 	event
