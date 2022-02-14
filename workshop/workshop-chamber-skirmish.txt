@@ -124,26 +124,19 @@ rule("HUD - scoreboard spacing")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Has Spawned(Event Player) == True;
+		Ongoing - Global;
 	}
 
 	actions
 	{
-		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
-			String, Visible Always);
-		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White), Color(White),
-			String, Visible Always);
-		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
-			White), String, Visible Always);
-		Create HUD Text(Event Player, Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White), Color(
-			White), String, Visible Always);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
 	}
 }
 
