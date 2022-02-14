@@ -326,13 +326,13 @@ rule("HUD - scoreboard spacing")
 	actions
 	{
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
-			Color(White), Visible To, Visible Never);
+			Color(White), None, Visible Never);
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
-			Color(White), Visible To, Visible Never);
+			Color(White), None, Visible Never);
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
-			Color(White), Visible To, Visible Never);
+			Color(White), None, Visible Never);
 		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
-			Color(White), Visible To, Visible Never);
+			Color(White), None, Visible Never);
 	}
 }
 
