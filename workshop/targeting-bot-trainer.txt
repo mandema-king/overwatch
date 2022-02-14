@@ -388,6 +388,7 @@ rule("When all players on a team are dead, increment \"team kills\" for other te
 		If(Count Of(All Living Players(Team 2)) == 0);
 			Global.entire_team_kills[0] += 1;
 		End;
+		Wait(6, Ignore Condition);
 	}
 }
 
