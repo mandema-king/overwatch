@@ -148,6 +148,26 @@ rule("When all players on Team 2 are dead, increment \"team kills\" for Team 1")
 	}
 }
 
+rule("Global scoreboard")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 1), Vector(10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[0]), Vector(10, 15, 19.500),
+			2, Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 2), Vector(-10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[1]), Vector(-10, 15,
+			19.500), 2, Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+	}
+}
+
 rule("HUD - game name")
 {
 	event

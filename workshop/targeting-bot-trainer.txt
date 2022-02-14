@@ -29,6 +29,7 @@ variables
 		6: bot_turn_rate
 		7: hud_notifications_duration
 		8: hud_notifications_sort_order
+		9: entire_team_kills
 
 	player:
 		0: bot_targeted_enemy
@@ -68,6 +69,7 @@ rule("Initialize global variables")
 
 	actions
 	{
+		Global.entire_team_kills = Array(-1, -1);
 		Global.game_name = Custom String("Targeting Bot Trainer");
 		Global.hud_notifications_sort_order = 1000;
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
@@ -359,6 +361,66 @@ rule("When bot sees no living enemies, reload weapon")
 		Press Button(Event Player, Button(Reload));
 		Wait(1, Ignore Condition);
 		Loop If Condition Is True;
+	}
+}
+
+rule("When all players on Team 1 are dead, increment \"team kills\" for Team 2")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+		Count Of(All Living Players(Team 1)) == 0;
+	}
+
+	actions
+	{
+		Global.entire_team_kills[1] += 1;
+		Big Message(All Players(All Teams), Custom String("Team kill"));
+	}
+}
+
+rule("When all players on Team 2 are dead, increment \"team kills\" for Team 1")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+		Count Of(All Living Players(Team 2)) == 0;
+	}
+
+	actions
+	{
+		Global.entire_team_kills[0] += 1;
+		Big Message(All Players(All Teams), Custom String("Team kill"));
+	}
+}
+
+rule("Global scoreboard")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 1), Vector(10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[0]), Vector(10, 15, 19.500),
+			2, Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 2), Vector(-10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[1]), Vector(-10, 15,
+			19.500), 2, Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
 	}
 }
 
