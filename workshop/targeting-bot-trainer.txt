@@ -276,6 +276,30 @@ rule("When bot kills targeted enemy, stop targeting")
 	}
 }
 
+rule("When bot dies, stop targeting")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} died", Hero Icon String(Hero Of(Event Player)), String(
+			"{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order, Color(White), Color(
+			White), Color(White), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Event Player.bot_targeted_enemy = Null;
+	}
+}
+
 rule("When bot sees no living enemies, reload weapon")
 {
 	event
