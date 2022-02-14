@@ -69,7 +69,7 @@ rule("Initialize global variables")
 
 	actions
 	{
-		Global.entire_team_kills = Array(-1, -1);
+		Global.entire_team_kills = Array(0, 0);
 		Global.game_name = Custom String("Targeting Bot Trainer");
 		Global.hud_notifications_sort_order = 1000;
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
@@ -374,6 +374,7 @@ rule("When all players on Team 1 are dead, increment \"team kills\" for Team 2")
 	conditions
 	{
 		Is Game In Progress == True;
+		Is True For Any(All Players(Team 1), Has Spawned(Current Array Element)) == True;
 		Count Of(All Living Players(Team 1)) == 0;
 	}
 
@@ -394,6 +395,7 @@ rule("When all players on Team 2 are dead, increment \"team kills\" for Team 1")
 	conditions
 	{
 		Is Game In Progress == True;
+		Is True For Any(All Players(Team 2), Has Spawned(Current Array Element)) == True;
 		Count Of(All Living Players(Team 2)) == 0;
 	}
 
