@@ -172,6 +172,35 @@ rule("When bot has spawned, begin targeting enemy")
 	}
 }
 
+rule("When bot takes damage, begin targeting attacker")
+{
+	event
+	{
+		Player Took Damage;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Is Alive(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} took damage from {2}", Hero Icon String(Hero Of(
+			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Attacker), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Event Player.bot_targeted_enemy = Attacker;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(
+			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+	}
+}
+
 rule("When bot has targeted enemy, start facing target")
 {
 	event
