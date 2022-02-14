@@ -27,11 +27,19 @@ variables
 		4: team_2_spawn_positions
 		5: targeting_interval
 		6: bot_turn_rate
+		7: hud_notifications_duration
+		8: hud_notifications_sort_order
 
 	player:
 		0: bot_targeted_enemy
 		1: primary_fire_cooldown
 		2: primary_fire_max_range
+		3: hud_notifications
+}
+
+subroutines
+{
+	0: AddLastTextToPlayerNotifications
 }
 
 rule("Workshop settings")
@@ -44,6 +52,8 @@ rule("Workshop settings")
 	actions
 	{
 		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 20);
+		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
+			"Notification duration [seconds]"), 5, 5, 20, 10);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
 			0.200, 1, 10);
 	}
@@ -59,6 +69,7 @@ rule("Initialize global variables")
 	actions
 	{
 		Global.game_name = Custom String("Targeting Bot Trainer");
+		Global.hud_notifications_sort_order = 1000;
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
 		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
@@ -98,14 +109,10 @@ rule("Initialize player variables")
 		All;
 	}
 
-	conditions
-	{
-		Is Dummy Bot(Event Player) == True;
-	}
-
 	actions
 	{
 		Event Player.bot_targeted_enemy = Null;
+		Event Player.hud_notifications = Empty Array;
 	}
 }
 
@@ -144,6 +151,12 @@ rule("When bot has spawned, begin targeting enemy")
 	actions
 	{
 		Event Player.bot_targeted_enemy = Player Closest To Reticle(Event Player, Opposite Team Of(Team Of(Event Player)));
+		If(Event Player.bot_targeted_enemy);
+			Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(Event Player)),
+				String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+			Call Subroutine(AddLastTextToPlayerNotifications);
+		End;
 		Wait(Global.targeting_interval, Ignore Condition);
 		Loop If Condition Is True;
 	}
@@ -169,6 +182,10 @@ rule("When bot has targeted enemy, start facing target")
 	{
 		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_targeted_enemy)),
 			Global.bot_turn_rate, To World, Direction and Turn Rate);
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} has started facing {2}", Hero Icon String(Hero Of(Event Player)),
+			String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
 	}
 }
 
@@ -217,6 +234,10 @@ rule("When bot sees no living enemies, reload weapon")
 
 	actions
 	{
+		Create HUD Text(Event Player, Null, Null, Custom String("{0} {1} sees no enemies...reloading weapon", Hero Icon String(Hero Of(
+			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order,
+			Color(White), Color(White), Color(White), Visible To and String, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
 		Press Button(Event Player, Button(Reload));
 		Wait(1, Ignore Condition);
 		Loop If Condition Is True;
@@ -309,5 +330,44 @@ rule("HUD - Team 2 scoreboard")
 			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
 			Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
 			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("Add last text (with expiration time) to player HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToPlayerNotifications;
+	}
+
+	actions
+	{
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove expired player HUD notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.hud_notifications));
+			If(Event Player.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Event Player.hud_notifications[1]);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop;
 	}
 }
