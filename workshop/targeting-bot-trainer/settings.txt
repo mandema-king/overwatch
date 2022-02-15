@@ -32,6 +32,7 @@ variables
 		9: entire_team_kills
 		10: bot_passive_mode_enabled
 		11: bot_difficulty
+		12: bot_headshot_aim_probability
 
 	player:
 		0: bot_targeted_enemy
@@ -103,14 +104,19 @@ rule("Configure bot difficulty")
 	actions
 	{
 		If(Global.bot_difficulty == 1);
+			Global.bot_headshot_aim_probability = 10;
 			Global.bot_turn_rate = 200;
 		Else If(Global.bot_difficulty == 2);
+			Global.bot_headshot_aim_probability = 20;
 			Global.bot_turn_rate = 250;
 		Else If(Global.bot_difficulty == 3);
+			Global.bot_headshot_aim_probability = 30;
 			Global.bot_turn_rate = 300;
 		Else If(Global.bot_difficulty == 4);
+			Global.bot_headshot_aim_probability = 40;
 			Global.bot_turn_rate = 350;
 		Else If(Global.bot_difficulty == 5);
+			Global.bot_headshot_aim_probability = 50;
 			Global.bot_turn_rate = 400;
 	}
 }
@@ -249,8 +255,21 @@ rule("When bot has targeted enemy, start facing target")
 
 	actions
 	{
-		Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_targeted_enemy)),
-			Global.bot_turn_rate, To World, Direction and Turn Rate);
+		If(Random Integer(0, 100) <= Global.bot_headshot_aim_probability);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is aiming for headshot on {2}", Hero Icon String(
+				Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy),
+				Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
+			Call Subroutine(AddLastTextToPlayerNotifications);
+			Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_targeted_enemy)),
+				Global.bot_turn_rate, To World, Direction and Turn Rate);
+		Else;
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is aiming for body shot on {2}", Hero Icon String(
+				Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy),
+				Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
+			Call Subroutine(AddLastTextToPlayerNotifications);
+			Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.bot_targeted_enemy + Up * (Eye Position(
+				Event Player.bot_targeted_enemy) / 2)), Global.bot_turn_rate, To World, Direction and Turn Rate);
+		End;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} has started facing {2}", Hero Icon String(Hero Of(
 			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
 			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
