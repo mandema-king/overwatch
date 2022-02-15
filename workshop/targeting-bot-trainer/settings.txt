@@ -31,6 +31,7 @@ variables
 		8: hud_notifications_sort_order
 		9: entire_team_kills
 		10: bot_passive_mode_enabled
+		11: bot_difficulty
 
 	player:
 		0: bot_targeted_enemy
@@ -53,9 +54,9 @@ rule("Workshop settings")
 
 	actions
 	{
+		Global.bot_difficulty = Workshop Setting Integer(Custom String("General"), Custom String("Bot difficulty"), 5, 1, 5, 10);
 		Global.bot_passive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
-			"Passive bots (only attack when injured)"), False, 10);
-		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 20);
+			"Passive bots (only attack when injured)"), False, 20);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
 			0.200, 1, 30);
 		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
@@ -89,6 +90,28 @@ rule("Initialize global variables")
 		Global.team_2_spawn_positions[3] = Vector(-16, 0, 0);
 		Global.team_2_spawn_positions[4] = Vector(-16, 0, -1);
 		Global.team_2_spawn_positions[5] = Vector(-16, 0, 1);
+	}
+}
+
+rule("Configure bot difficulty")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		If(Global.bot_difficulty == 1);
+			Global.bot_turn_rate = 200;
+		Else If(Global.bot_difficulty == 2);
+			Global.bot_turn_rate = 250;
+		Else If(Global.bot_difficulty == 3);
+			Global.bot_turn_rate = 300;
+		Else If(Global.bot_difficulty == 4);
+			Global.bot_turn_rate = 350;
+		Else If(Global.bot_difficulty == 5);
+			Global.bot_turn_rate = 400;
 	}
 }
 
