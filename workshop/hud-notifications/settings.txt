@@ -20,8 +20,9 @@ settings
 variables
 {
 	global:
-		0: hud_notifications_duration
-		1: hud_notifications_sort_order
+		0: game_name
+		1: hud_notifications_duration
+		2: hud_notifications_sort_order
 
 	player:
 		0: hud_notifications
@@ -60,6 +61,7 @@ rule("Initialize global variables")
 
 	actions
 	{
+		Global.game_name = Custom String("HUD Notifications");
 		Global.hud_notifications_sort_order = 1000;
 	}
 }
@@ -195,6 +197,20 @@ rule("When player holds reload button, show sample notification")
 		Create HUD Text(Event Player, Null, Null, Custom String("Holding reload button"), Left, Global.hud_notifications_sort_order, Color(
 			White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Call Subroutine(AddLastTextToPlayerNotifications);
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
 	}
 }
 

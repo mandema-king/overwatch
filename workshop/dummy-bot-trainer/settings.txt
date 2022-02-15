@@ -22,6 +22,7 @@ variables
 	global:
 		0: bot_turn_rate
 		1: bot_targeting_timeout
+		2: game_name
 
 	player:
 		0: bot_healers
@@ -42,6 +43,7 @@ rule("Global initialize")
 		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 10);
 		Global.bot_targeting_timeout = Workshop Setting Real(Custom String("General"), Custom String("Bot targeting timeout [seconds]"), 1,
 			0.500, 1, 20);
+		Global.game_name = Custom String("Dummy Bot Trainer");
 	}
 }
 
@@ -342,5 +344,19 @@ rule("When Mei freezes an enemy, switch to secondary fire")
 				Stop Holding Button(Event Player, Button(Secondary Fire));
 				Start Holding Button(Event Player, Button(Primary Fire));
 			End;
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
 	}
 }

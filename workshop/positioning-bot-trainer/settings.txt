@@ -20,8 +20,9 @@ settings
 variables
 {
 	global:
-		0: team_1_spawn_location
-		1: team_2_spawn_location
+		0: game_name
+		1: team_1_spawn_location
+		2: team_2_spawn_location
 
 	player:
 		0: bot_preferred_position
@@ -39,6 +40,7 @@ rule("Initialize global variables")
 
 	actions
 	{
+		Global.game_name = Custom String("Positioning Bot Trainer");
 		Global.team_1_spawn_location = Vector(15, 0, 0);
 		Global.team_2_spawn_location = Vector(-15, 0, 0);
 	}
@@ -200,5 +202,19 @@ rule("When 'interact' button is pressed, create text to show current position")
 	{
 		Create In-World Text(All Players(All Teams), Custom String("{0}", Position Of(Event Player)), Position Of(Event Player), 1,
 			Clip Against Surfaces, None, Color(Green), Default Visibility);
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
 	}
 }

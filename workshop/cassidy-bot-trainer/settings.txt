@@ -23,6 +23,7 @@ variables
 		0: bot_turn_rate
 		1: bot_targeting_timeout
 		2: bot_passive_mode_enabled
+		3: game_name
 
 	player:
 		0: bot_strafe_duration_max
@@ -55,6 +56,7 @@ rule("Global initialize")
 		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 10);
 		Global.bot_targeting_timeout = Workshop Setting Real(Custom String("General"), Custom String("Bot targeting timeout [seconds]"), 1,
 			0.500, 1, 20);
+		Global.game_name = Custom String("Cassidy Bot Trainer");
 	}
 }
 
@@ -167,5 +169,19 @@ rule("When bot is not passive or is injured, attack with primary fire")
 		Press Button(Event Player, Button(Primary Fire));
 		Wait(0.500, Ignore Condition);
 		Loop If Condition Is True;
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
 	}
 }
