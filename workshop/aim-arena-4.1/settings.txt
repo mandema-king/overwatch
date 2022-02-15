@@ -1470,20 +1470,13 @@ rule("HUD - game name")
 {
 	event
 	{
-		Ongoing - Each Player;
-		Team 1;
-		All;
-	}
-
-	conditions
-	{
-		Has Spawned(Event Player) == True;
+		Ongoing - Global;
 	}
 
 	actions
 	{
-		Create HUD Text(Event Player, Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White), String,
-			Visible Always);
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
 	}
 }
 
