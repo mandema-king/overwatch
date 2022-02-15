@@ -30,6 +30,7 @@ variables
 		7: hud_notifications_duration
 		8: hud_notifications_sort_order
 		9: entire_team_kills
+		10: bot_passive_mode_enabled
 
 	player:
 		0: bot_targeted_enemy
@@ -52,9 +53,11 @@ rule("Workshop settings")
 
 	actions
 	{
-		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 10);
+		Global.bot_passive_mode_enabled = Workshop Setting Toggle(Custom String("General"), Custom String(
+			"Passive bots (only attack when injured)"), False, 10);
+		Global.bot_turn_rate = Workshop Setting Integer(Custom String("General"), Custom String("Bot turn rate"), 400, 200, 1000, 20);
 		Global.targeting_interval = Workshop Setting Real(Custom String("General"), Custom String("Targeting interval [seconds]"), 0.500,
-			0.200, 1, 20);
+			0.200, 1, 30);
 		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
 			"Notification duration [seconds]"), 5, 5, 20, 10);
 	}
@@ -271,6 +274,7 @@ rule("When bot ray cast hits enemy, fire weapon")
 	{
 		Is Dummy Bot(Event Player) == True;
 		Hero Of(Event Player) != Hero(Hanzo);
+		(!Global.bot_passive_mode_enabled || Normalized Health(Event Player) <= 0.990) == True;
 		Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(Event Player)
 			* Event Player.primary_fire_max_range, All Living Players(Opposite Team Of(Team Of(Event Player))), Event Player, True)
 			!= Null;
