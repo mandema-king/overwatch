@@ -375,8 +375,8 @@ rule("When enemy is within small view angle, fire weapon")
 		Is Dummy Bot(Event Player) == True;
 		Hero Of(Event Player) != Hero(Hanzo);
 		(!Global.bot_passive_mode_enabled || Normalized Health(Event Player) <= 0.990) == True;
-		Count Of(Filtered Array(Players in View Angle(Event Player, Opposite Team Of(Team Of(Event Player)), 10), Is Alive(
-			Current Array Element))) > 0;
+		Count Of(Filtered Array(Players in View Angle(Event Player, Opposite Team Of(Team Of(Event Player)), 20), Has Spawned(
+			Current Array Element) && Is Alive(Current Array Element))) > 0;
 	}
 
 	actions
