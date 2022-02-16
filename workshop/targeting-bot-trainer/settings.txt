@@ -56,6 +56,8 @@ variables
 		1: primary_fire_cooldown
 		2: primary_fire_max_range
 		3: hud_notifications
+		4: bot_strafe_duration_max
+		5: bot_strafe_duration_min
 }
 
 subroutines
@@ -162,6 +164,8 @@ rule("Initialize player variables")
 
 	actions
 	{
+		Event Player.bot_strafe_duration_min = 0.250;
+		Event Player.bot_strafe_duration_max = 1;
 		Event Player.bot_targeted_enemy = Null;
 		Event Player.hud_notifications = Empty Array;
 	}
@@ -180,6 +184,35 @@ rule("Configure hero properties - Cassidy")
 	{
 		Event Player.primary_fire_cooldown = 0.500;
 		Event Player.primary_fire_max_range = 40;
+	}
+}
+
+rule("When bot has spawned, start strafing left and right")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Dummy Bot(Event Player) == True;
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Start Throttle In Direction(Event Player, Left, 1, To Player, Replace existing throttle, Direction and Magnitude);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
+		Stop Throttle In Direction(Event Player);
+		Wait(0.050, Ignore Condition);
+		Start Throttle In Direction(Event Player, Right, 1, To Player, Replace existing throttle, Direction and Magnitude);
+		Wait(Random Real(Event Player.bot_strafe_duration_min, Event Player.bot_strafe_duration_max), Ignore Condition);
+		Stop Throttle In Direction(Event Player);
+		Wait(0.050, Ignore Condition);
+		Loop If Condition Is True;
 	}
 }
 
