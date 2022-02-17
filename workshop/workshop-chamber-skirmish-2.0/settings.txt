@@ -181,6 +181,27 @@ rule("When a round has not started and all players on a team have spawned and ar
 	}
 }
 
+rule("When a round has not started (e.g. the match is in-between rounds), heal all players to full health")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.round_started == False;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("Healing all players"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To, Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
+		Heal(All Players(All Teams), Null, 100000);
+	}
+}
+
 rule("When a round has not started, treat all living players as \"invincible\"")
 {
 	event
