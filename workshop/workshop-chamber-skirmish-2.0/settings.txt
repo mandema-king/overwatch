@@ -38,7 +38,7 @@ rule("Initialize global variables")
 	actions
 	{
 		Global.entire_team_kills = Array(0, 0);
-		Global.game_name = Custom String("Workshop Chamber - Skirmish 1.0 - XMZ1P");
+		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
 		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
