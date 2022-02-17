@@ -20,17 +20,17 @@ settings
 variables
 {
 	global:
-		0: rounds_won
-		1: game_name
-		2: team_1_spawn_direction
-		3: team_2_spawn_direction
-		4: team_1_spawn_positions
-		5: team_2_spawn_positions
-		6: hud_notifications
-		7: hud_notifications_duration
-		8: hud_notifications_sort_order
-		9: round_number
-		10: round_started
+		0: game_name
+		1: hud_notifications
+		2: hud_notifications_duration
+		3: hud_notifications_sort_order
+		4: round_number
+		5: round_started
+		6: rounds_won
+		7: team_1_spawn_direction
+		8: team_2_spawn_direction
+		9: team_1_spawn_positions
+		10: team_2_spawn_positions
 
 	player:
 		0: hud_notifications
