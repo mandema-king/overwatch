@@ -180,6 +180,35 @@ rule("When a round has not started and all players on a team have spawned and ar
 	}
 }
 
+rule("When a round has not started, treat all living players as \"invincible\"")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Is Alive(Event Player) == True;
+		Global.round_started == False;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Waiting for round to start -- players take no damage"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Set Status(Event Player, Null, Invincible, 9999);
+		Create Effect(All Players(All Teams), Good Aura, Color(Yellow), Event Player, 1, Visible To Position and Radius);
+		Small Message(Event Player, Custom String("Waiting for round to start"));
+		Wait Until(Global.round_started, 99999);
+		Loop If Condition Is True;
+	}
+}
+
 rule("When all players on a team are dead, increment \"rounds won\" for other team")
 {
 	event
