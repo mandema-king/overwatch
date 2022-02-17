@@ -29,6 +29,8 @@ variables
 		6: hud_notifications
 		7: hud_notifications_duration
 		8: hud_notifications_sort_order
+		9: round_number
+		10: round_started
 
 	player:
 		0: hud_notifications
@@ -67,6 +69,8 @@ rule("Initialize global variables")
 		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
 		Global.hud_notifications = Empty Array;
 		Global.hud_notifications_sort_order = 1000;
+		Global.round_number = 0;
+		Global.round_started = False;
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
 		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
@@ -151,7 +155,32 @@ disabled rule("Create bots")
 	}
 }
 
-rule("When all players on a team are dead, increment \"team kills\" for other team")
+rule("When a round has not started and all players on a team have spawned and are alive, start a round")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+		Global.round_started == False;
+		Is True For All(All Players(All Teams), Has Spawned(Current Array Element) && Is Alive(Current Array Element)) == True;
+	}
+
+	actions
+	{
+		Global.round_number += 1;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("Starting round {0}", Global.round_number), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To, Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
+		Global.round_started = True;
+		Big Message(All Players(All Teams), Custom String("Round {0}", Global.round_number));
+	}
+}
+
+rule("When all players on a team are dead, increment \"rounds won\" for other team")
 {
 	event
 	{
@@ -170,15 +199,17 @@ rule("When all players on a team are dead, increment \"team kills\" for other te
 	{
 		Big Message(All Players(All Teams), Custom String("Team kill"));
 		If(Count Of(All Living Players(Team 1)) == 0);
-			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won the round"), Left,
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won round {0}", Global.round_number), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 2), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
+			Global.round_started = False;
 			Global.rounds_won[1] += 1;
 		End;
 		If(Count Of(All Living Players(Team 2)) == 0);
-			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won the round"), Left,
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won round {0}", Global.round_number), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 1), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
+			Global.round_started = False;
 			Global.rounds_won[0] += 1;
 		End;
 		Wait(6, Ignore Condition);
