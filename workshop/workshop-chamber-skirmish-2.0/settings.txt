@@ -20,7 +20,7 @@ settings
 variables
 {
 	global:
-		0: entire_team_kills
+		0: rounds_won
 		1: game_name
 		2: team_1_spawn_direction
 		3: team_2_spawn_direction
@@ -63,7 +63,7 @@ rule("Initialize global variables")
 
 	actions
 	{
-		Global.entire_team_kills = Array(0, 0);
+		Global.rounds_won = Array(0, 0);
 		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
 		Global.hud_notifications = Empty Array;
 		Global.hud_notifications_sort_order = 1000;
@@ -173,13 +173,13 @@ rule("When all players on a team are dead, increment \"team kills\" for other te
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won the round"), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 2), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
-			Global.entire_team_kills[1] += 1;
+			Global.rounds_won[1] += 1;
 		End;
 		If(Count Of(All Living Players(Team 2)) == 0);
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won the round"), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 1), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
-			Global.entire_team_kills[0] += 1;
+			Global.rounds_won[0] += 1;
 		End;
 		Wait(6, Ignore Condition);
 	}
@@ -196,12 +196,12 @@ rule("Global scoreboard")
 	{
 		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 1), Vector(10, 18, 19.500), 2.500, Do Not Clip,
 			Visible To and String, Color(Team 1), Visible Always);
-		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[0]), Vector(10, 15, 19.500),
-			2, Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[0]), Vector(10, 15, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
 		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 2), Vector(-10, 18, 19.500), 2.500, Do Not Clip,
 			Visible To and String, Color(Team 2), Visible Always);
-		Create In-World Text(All Players(All Teams), Custom String("Team kills: {0}", Global.entire_team_kills[1]), Vector(-10, 15,
-			19.500), 2, Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[1]), Vector(-10, 15, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
 	}
 }
 
