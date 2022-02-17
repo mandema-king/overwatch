@@ -23,6 +23,7 @@ variables
 		0: game_name
 		1: hud_notifications_duration
 		2: hud_notifications_sort_order
+		3: hud_notifications
 
 	player:
 		0: hud_notifications
@@ -31,6 +32,7 @@ variables
 subroutines
 {
 	0: AddLastTextToPlayerNotifications
+	1: AddLastTextToGlobalNotifications
 }
 
 rule("Workshop settings")
@@ -62,6 +64,7 @@ rule("Initialize global variables")
 	actions
 	{
 		Global.game_name = Custom String("HUD Notifications");
+		Global.hud_notifications = Empty Array;
 		Global.hud_notifications_sort_order = 1000;
 	}
 }
@@ -97,6 +100,10 @@ rule("When player has spawned, show sample notifications")
 
 	actions
 	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} has spawned", Hero Icon String(Hero Of(Event Player)),
+			Event Player), Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To and String,
+			Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
 		Create HUD Text(Event Player, Null, Null, Custom String("Sample notification #1"), Left, Global.hud_notifications_sort_order,
 			Color(White), Color(White), Color(White), Visible To and String, Default Visibility);
 		Call Subroutine(AddLastTextToPlayerNotifications);
@@ -200,6 +207,23 @@ rule("When player holds reload button, show sample notification")
 	}
 }
 
+rule("When player dies, show global notification")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} was killed by {1}", Event Player, Attacker), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To, Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
+	}
+}
+
 rule("HUD - game name")
 {
 	event
@@ -211,6 +235,21 @@ rule("HUD - game name")
 	{
 		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
 			Visible To, Visible Always);
+	}
+}
+
+rule("Add last text (with expiration time) to global HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToGlobalNotifications;
+	}
+
+	actions
+	{
+		Modify Global Variable(hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Global Variable(hud_notifications, Append To Array, Last Text ID);
 	}
 }
 
@@ -226,6 +265,28 @@ rule("Add last text (with expiration time) to player HUD notifications")
 	{
 		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
 		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove expired global HUD notifications")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		While(Count Of(Global.hud_notifications));
+			If(Global.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Global.hud_notifications[1]);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop;
 	}
 }
 
