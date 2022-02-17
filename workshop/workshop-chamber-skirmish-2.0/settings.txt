@@ -238,19 +238,18 @@ rule("When a round has started, remove \"invincible\" status")
 	}
 }
 
-rule("When all players on a team are dead, increment \"rounds won\" for other team")
+rule("When a round has started and the last player on a team dies, stop the round, and increment \"rounds won\" for other team")
 {
 	event
 	{
-		Ongoing - Global;
+		Player Died;
+		All;
+		All;
 	}
 
 	conditions
 	{
-		Is Game In Progress == True;
-		(Is True For Any(All Players(Team 1), Has Spawned(Current Array Element)) && Is True For Any(All Players(Team 2), Has Spawned(
-			Current Array Element))) == True;
-		(Count Of(All Living Players(Team 1)) == 0 || Count Of(All Living Players(Team 2)) == 0) == True;
+		Global.round_started == True;
 	}
 
 	actions
@@ -271,7 +270,6 @@ rule("When all players on a team are dead, increment \"rounds won\" for other te
 			Global.round_started = False;
 			Global.rounds_won[0] += 1;
 		End;
-		Wait(6, Ignore Condition);
 	}
 }
 
