@@ -34,6 +34,7 @@ variables
 
 	player:
 		0: hud_notifications
+		1: invincible_effect
 }
 
 subroutines
@@ -203,8 +204,36 @@ rule("When a round has not started, treat all living players as \"invincible\"")
 		Call Subroutine(AddLastTextToPlayerNotifications);
 		Set Status(Event Player, Null, Invincible, 9999);
 		Create Effect(All Players(All Teams), Good Aura, Color(Yellow), Event Player, 1, Visible To Position and Radius);
+		Event Player.invincible_effect = Last Created Entity;
 		Small Message(Event Player, Custom String("Waiting for round to start"));
 		Wait Until(Global.round_started, 99999);
+		Loop If Condition Is True;
+	}
+}
+
+rule("When a round has started, remove \"invincible\" status")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Global.round_started == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Round started -- players now take damage"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Clear Status(Event Player, Invincible);
+		Destroy Effect(Event Player.invincible_effect);
+		Wait Until(!Global.round_started, 99999);
 		Loop If Condition Is True;
 	}
 }
