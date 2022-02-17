@@ -20,12 +20,12 @@ settings
 variables
 {
 	global:
-		0: team_1_spawn_direction
-		1: team_2_spawn_direction
-		2: team_1_spawn_positions
-		3: team_2_spawn_positions
-		4: game_name
-		5: entire_team_kills
+		0: entire_team_kills
+		1: game_name
+		2: team_1_spawn_direction
+		3: team_2_spawn_direction
+		4: team_1_spawn_positions
+		5: team_2_spawn_positions
 }
 
 rule("Initialize global variables")
