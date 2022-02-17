@@ -255,11 +255,11 @@ rule("When all players on a team are dead, increment \"rounds won\" for other te
 
 	actions
 	{
-		Big Message(All Players(All Teams), Custom String("Team kill"));
 		If(Count Of(All Living Players(Team 1)) == 0);
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won round {0}", Global.round_number), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 2), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
+			Big Message(All Players(All Teams), Custom String("Team 2 won round {0}", Global.round_number));
 			Global.round_started = False;
 			Global.rounds_won[1] += 1;
 		End;
@@ -267,6 +267,7 @@ rule("When all players on a team are dead, increment \"rounds won\" for other te
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won round {0}", Global.round_number), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 1), Visible To, Visible Always);
 			Call Subroutine(AddLastTextToGlobalNotifications);
+			Big Message(All Players(All Teams), Custom String("Team 1 won round {0}", Global.round_number));
 			Global.round_started = False;
 			Global.rounds_won[0] += 1;
 		End;
