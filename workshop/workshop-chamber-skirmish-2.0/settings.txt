@@ -26,6 +26,32 @@ variables
 		3: team_2_spawn_direction
 		4: team_1_spawn_positions
 		5: team_2_spawn_positions
+		6: hud_notifications
+		7: hud_notifications_duration
+		8: hud_notifications_sort_order
+
+	player:
+		0: hud_notifications
+}
+
+subroutines
+{
+	0: AddLastTextToGlobalNotifications
+	1: AddLastTextToPlayerNotifications
+}
+
+rule("Workshop settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
+			"Notification duration [seconds]"), 5, 5, 20, 10);
+	}
 }
 
 rule("Initialize global variables")
@@ -39,6 +65,8 @@ rule("Initialize global variables")
 	{
 		Global.entire_team_kills = Array(0, 0);
 		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
+		Global.hud_notifications = Empty Array;
+		Global.hud_notifications_sort_order = 1000;
 		Global.team_1_spawn_direction = Vector(-1, 0, 0);
 		Global.team_2_spawn_direction = Vector(1, 0, 0);
 		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
@@ -53,6 +81,21 @@ rule("Initialize global variables")
 		Global.team_2_spawn_positions[3] = Vector(-16, 0, 0);
 		Global.team_2_spawn_positions[4] = Vector(-16, 0, -1);
 		Global.team_2_spawn_positions[5] = Vector(-16, 0, 1);
+	}
+}
+
+rule("Initialize player variables")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Event Player.hud_notifications = Empty Array;
 	}
 }
 
@@ -127,9 +170,15 @@ rule("When all players on a team are dead, increment \"team kills\" for other te
 	{
 		Big Message(All Players(All Teams), Custom String("Team kill"));
 		If(Count Of(All Living Players(Team 1)) == 0);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won the round"), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 2), Visible To, Visible Always);
+			Call Subroutine(AddLastTextToGlobalNotifications);
 			Global.entire_team_kills[1] += 1;
 		End;
 		If(Count Of(All Living Players(Team 2)) == 0);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won the round"), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 1), Visible To, Visible Always);
+			Call Subroutine(AddLastTextToGlobalNotifications);
 			Global.entire_team_kills[0] += 1;
 		End;
 		Wait(6, Ignore Condition);
@@ -235,5 +284,81 @@ rule("HUD - Team 2 scoreboard")
 			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
 			Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
 			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("Add last text (with expiration time) to global HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToGlobalNotifications;
+	}
+
+	actions
+	{
+		Modify Global Variable(hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Global Variable(hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Add last text (with expiration time) to player HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToPlayerNotifications;
+	}
+
+	actions
+	{
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove expired global HUD notifications")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		While(Count Of(Global.hud_notifications));
+			If(Global.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Global.hud_notifications[1]);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop;
+	}
+}
+
+rule("Remove expired player HUD notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.hud_notifications));
+			If(Event Player.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Event Player.hud_notifications[1]);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop;
 	}
 }
