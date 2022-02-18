@@ -2,7 +2,8 @@ settings
 {
 	main
 	{
-		Description: "Practice vs. dummy bots that continuously strafe but only attack once injured."
+		Description: "Practice against custom bots that strafe randomly but only attack once injured (by default). Disable \"passive bots\" in Workshop Settings to change this behavior."
+		Mode Name: "Aim Trainer"
 	}
 
 	lobby
