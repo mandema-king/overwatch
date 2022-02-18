@@ -275,6 +275,11 @@ rule("Remove expired global HUD notifications")
 		Ongoing - Global;
 	}
 
+	conditions
+	{
+		Count Of(Global.hud_notifications) > 0;
+	}
+
 	actions
 	{
 		While(Count Of(Global.hud_notifications));
@@ -286,7 +291,7 @@ rule("Remove expired global HUD notifications")
 			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
 		End;
 		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
-		Loop;
+		Loop If Condition Is True;
 	}
 }
 
@@ -297,6 +302,11 @@ rule("Remove expired player HUD notifications")
 		Ongoing - Each Player;
 		All;
 		All;
+	}
+
+	conditions
+	{
+		Count Of(Event Player.hud_notifications) > 0;
 	}
 
 	actions
@@ -310,6 +320,6 @@ rule("Remove expired player HUD notifications")
 			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
 		End;
 		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
-		Loop;
+		Loop If Condition Is True;
 	}
 }
