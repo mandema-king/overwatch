@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "Demonstrates bot targeting of enemy players"
+		Mode Name: "Proof of Concept"
+	}
+
 	lobby
 	{
 		Max Team 1 Players: 1

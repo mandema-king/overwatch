@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "A \"trainer\" game used to develop a custom bot for Cassidy"
+		Mode Name: "Bot Trainer"
+	}
+
 	modes
 	{
 		Skirmish

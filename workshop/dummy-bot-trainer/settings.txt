@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "A \"trainer\" game for developing a number of different custom bots"
+		Mode Name: "Bot Trainer"
+	}
+
 	modes
 	{
 		Skirmish

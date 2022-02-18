@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "Demonstrates HUD notifications (temporary messages visible to players and/or spectators)"
+		Mode Name: "Proof of Concept"
+	}
+
 	modes
 	{
 		Skirmish

@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "Skirmish against AI bots or other players in the Workshop Chamber to warm up, improve your skills, or practice with unfamiliar heroes. Defeat all players on the enemy team to win a round. All players are completely healed between rounds."
+		Mode Name: "Aim Trainer/Skirmish"
+	}
+
 	modes
 	{
 		Skirmish

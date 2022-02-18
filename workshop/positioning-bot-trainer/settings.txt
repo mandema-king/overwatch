@@ -1,5 +1,11 @@
 settings
 {
+	main
+	{
+		Description: "Demonstrates bot movement to a \"preferred position\" and then strafing randomly"
+		Mode Name: "Proof of Concept"
+	}
+
 	modes
 	{
 		Skirmish
