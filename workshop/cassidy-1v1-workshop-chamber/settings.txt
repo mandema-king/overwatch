@@ -2,8 +2,14 @@ settings
 {
 	main
 	{
-		Description: "Skirmish against AI bots or other players in the Workshop Chamber to warm up, improve your skills, or practice with unfamiliar heroes. Defeat all players on the enemy team to win a round. All players are completely healed between rounds."
-		Mode Name: "Aim Trainer/Skirmish"
+		Description: "Skirmish against a Cassidy AI bot or another player in the Workshop Chamber to warm up, improve your skills, or practice with an unfamiliar hero. Defeat enemy team to win a round. Players are completely healed between rounds."
+		Mode Name: "Cassidy 1v1 Workshop Chamber"
+	}
+
+	lobby
+	{
+		Max Team 1 Players: 1
+		Max Team 2 Players: 1
 	}
 
 	modes
@@ -19,6 +25,17 @@ settings
 		General
 		{
 			Limit Roles: 2 Of Each Role Per Team
+		}
+	}
+
+	heroes
+	{
+		General
+		{
+			enabled heroes
+			{
+				Cassidy
+			}
 		}
 	}
 }
@@ -73,7 +90,7 @@ rule("Initialize global variables")
 	actions
 	{
 		Global.rounds_won = Array(0, 0);
-		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
+		Global.game_name = Custom String("Cassidy 1v1 Workshop Chamber 1.0");
 		Global.hud_notifications = Empty Array;
 		Global.hud_notifications_sort_order = 1000;
 		Global.round_number = 0;
