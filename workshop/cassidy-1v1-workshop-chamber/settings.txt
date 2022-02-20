@@ -1,0 +1,503 @@
+settings
+{
+	main
+	{
+		Description: "Skirmish against AI bots or other players in the Workshop Chamber to warm up, improve your skills, or practice with unfamiliar heroes. Defeat all players on the enemy team to win a round. All players are completely healed between rounds."
+		Mode Name: "Aim Trainer/Skirmish"
+	}
+
+	modes
+	{
+		Skirmish
+		{
+			enabled maps
+			{
+				Workshop Chamber
+			}
+		}
+
+		General
+		{
+			Limit Roles: 2 Of Each Role Per Team
+		}
+	}
+}
+
+variables
+{
+	global:
+		0: game_name
+		1: hud_notifications
+		2: hud_notifications_duration
+		3: hud_notifications_sort_order
+		4: round_number
+		5: round_started
+		6: rounds_won
+		7: team_1_spawn_direction
+		8: team_2_spawn_direction
+		9: team_1_spawn_positions
+		10: team_2_spawn_positions
+
+	player:
+		0: hud_notifications
+		1: phased_out_effect
+}
+
+subroutines
+{
+	0: AddLastTextToGlobalNotifications
+	1: AddLastTextToPlayerNotifications
+}
+
+rule("Workshop settings")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.hud_notifications_duration = Workshop Setting Integer(Custom String("HUD - Notifications"), Custom String(
+			"Notification duration [seconds]"), 5, 5, 20, 10);
+	}
+}
+
+rule("Initialize global variables")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Global.rounds_won = Array(0, 0);
+		Global.game_name = Custom String("Workshop Chamber - Skirmish 2.0");
+		Global.hud_notifications = Empty Array;
+		Global.hud_notifications_sort_order = 1000;
+		Global.round_number = 0;
+		Global.round_started = False;
+		Global.team_1_spawn_direction = Vector(-1, 0, 0);
+		Global.team_2_spawn_direction = Vector(1, 0, 0);
+		Global.team_1_spawn_positions[0] = Vector(15, 0, 0);
+		Global.team_1_spawn_positions[1] = Vector(15, 0, -1);
+		Global.team_1_spawn_positions[2] = Vector(15, 0, 1);
+		Global.team_1_spawn_positions[3] = Vector(16, 0, 0);
+		Global.team_1_spawn_positions[4] = Vector(16, 0, -1);
+		Global.team_1_spawn_positions[5] = Vector(16, 0, 1);
+		Global.team_2_spawn_positions[0] = Vector(-15, 0, 0);
+		Global.team_2_spawn_positions[1] = Vector(-15, 0, -1);
+		Global.team_2_spawn_positions[2] = Vector(-15, 0, 1);
+		Global.team_2_spawn_positions[3] = Vector(-16, 0, 0);
+		Global.team_2_spawn_positions[4] = Vector(-16, 0, -1);
+		Global.team_2_spawn_positions[5] = Vector(-16, 0, 1);
+	}
+}
+
+rule("Initialize player variables")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Event Player.hud_notifications = Empty Array;
+	}
+}
+
+disabled rule("When player has spawned, initialize team spawn positions")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		If(Team Of(Event Player) == Team 1);
+			Global.team_1_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+		Else If(Team Of(Event Player) == Team 2);
+			Global.team_2_spawn_positions[Slot Of(Event Player)] = Position Of(Event Player);
+	}
+}
+
+disabled rule("Create bots")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Count Of(Global.team_2_spawn_positions) == Number Of Slots(Team 2);
+	}
+
+	actions
+	{
+		Create Dummy Bot(Hero(Ana), Team 1, 0, Global.team_1_spawn_positions[0], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(D.Va), Team 1, 1, Global.team_1_spawn_positions[1], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Orisa), Team 1, 2, Global.team_1_spawn_positions[2], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Cassidy), Team 1, 3, Global.team_1_spawn_positions[3], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Ashe), Team 1, 4, Global.team_1_spawn_positions[4], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Baptiste), Team 1, 5, Global.team_1_spawn_positions[5], Global.team_1_spawn_direction);
+		Create Dummy Bot(Hero(Ana), Team 2, 0, Global.team_2_spawn_positions[0], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(D.Va), Team 2, 1, Global.team_2_spawn_positions[1], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Orisa), Team 2, 2, Global.team_2_spawn_positions[2], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Cassidy), Team 2, 3, Global.team_2_spawn_positions[3], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Ashe), Team 2, 4, Global.team_2_spawn_positions[4], Global.team_2_spawn_direction);
+		Create Dummy Bot(Hero(Baptiste), Team 2, 5, Global.team_2_spawn_positions[5], Global.team_2_spawn_direction);
+	}
+}
+
+rule("When a round has not started and all players on a team have spawned and are alive, start a round")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Is Game In Progress == True;
+		Global.round_started == False;
+		Is True For All(All Players(All Teams), Has Spawned(Current Array Element) && Is Alive(Current Array Element)) == True;
+	}
+
+	actions
+	{
+		Global.round_number += 1;
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("Starting round {0}", Global.round_number), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To, Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
+		Global.round_started = True;
+		Big Message(All Players(All Teams), Custom String("Round {0}", Global.round_number));
+	}
+}
+
+rule("When a round has not started, treat all living players as \"phased out\"")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Is Alive(Event Player) == True;
+		Global.round_started == False;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Waiting for round to start -- players take no damage"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Set Status(Event Player, Null, Phased Out, 9999);
+		Create Effect(All Players(All Teams), Good Aura, Color(Yellow), Event Player, 1, Visible To Position and Radius);
+		Event Player.phased_out_effect = Last Created Entity;
+		Small Message(Event Player, Custom String("Waiting for round to start"));
+		Wait Until(Global.round_started, 99999);
+		Loop If Condition Is True;
+	}
+}
+
+rule("When a round has not started (e.g. the match is in-between rounds), heal all players to full health")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global.round_started == False;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Null, Custom String("Healing all players"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), Visible To, Visible Always);
+		Call Subroutine(AddLastTextToGlobalNotifications);
+		Heal(All Players(All Teams), Null, 100000);
+	}
+}
+
+rule("When a round has started, remove \"phased out\" status")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+		Global.round_started == True;
+	}
+
+	actions
+	{
+		Create HUD Text(Event Player, Null, Null, Custom String("Round started -- players now take damage"), Left,
+			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
+		Call Subroutine(AddLastTextToPlayerNotifications);
+		Clear Status(Event Player, Phased Out);
+		Destroy Effect(Event Player.phased_out_effect);
+		Wait Until(!Global.round_started, 99999);
+		Loop If Condition Is True;
+	}
+}
+
+rule("When a round has started and the last player on a team dies, stop the round, and increment \"rounds won\" for other team")
+{
+	event
+	{
+		Player Died;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global.round_started == True;
+	}
+
+	actions
+	{
+		If(Count Of(All Living Players(Team 1)) == 0);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 2 won round {0}", Global.round_number), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 2), Visible To, Visible Always);
+			Call Subroutine(AddLastTextToGlobalNotifications);
+			Big Message(All Players(All Teams), Custom String("Team 2 won round {0}", Global.round_number));
+			Global.round_started = False;
+			Global.rounds_won[1] += 1;
+		End;
+		If(Count Of(All Living Players(Team 2)) == 0);
+			Create HUD Text(All Players(All Teams), Null, Null, Custom String("Team 1 won round {0}", Global.round_number), Left,
+				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Team 1), Visible To, Visible Always);
+			Call Subroutine(AddLastTextToGlobalNotifications);
+			Big Message(All Players(All Teams), Custom String("Team 1 won round {0}", Global.round_number));
+			Global.round_started = False;
+			Global.rounds_won[0] += 1;
+		End;
+	}
+}
+
+rule("Global scoreboard")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 1), Vector(10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[0]), Vector(10, 15, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 2), Vector(-10, 18, 19.500), 2.500, Do Not Clip,
+			Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[1]), Vector(-10, 15, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+	}
+}
+
+rule("HUD - game name")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Global.game_name, Null, Null, Top, 0, Color(Purple), Color(White), Color(White),
+			Visible To, Visible Always);
+	}
+}
+
+rule("HUD - scoreboard spacing")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Right, -99999, Color(White), Color(White),
+			Color(White), Visible To, Visible Never);
+	}
+}
+
+rule("HUD - Team 1 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Left, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("HUD - Team 2 scoreboard")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 2;
+		All;
+	}
+
+	conditions
+	{
+		Has Spawned(Event Player) == True;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Custom String("{0} {1}: {2}", Hero Icon String(Hero Of(Event Player)), Is Dummy Bot(
+			Event Player) ? String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1) : Event Player, Custom String(
+			"{0} / {1} / {2}", Player Stat(Event Player, Final Blows), Player Stat(Event Player, Deaths), Player Stat(Event Player,
+			Hero Damage Dealt))), Null, Null, Right, Player Stat(Event Player, All Damage Dealt) * -0.010, Color(White), Color(White),
+			Color(White), Visible To Sort Order String and Color, Visible Always);
+	}
+}
+
+rule("HUD - notifications spacing")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Create HUD Text(All Players(All Teams), Null, Custom String(" "), Custom String(" "), Left,
+			Global.hud_notifications_sort_order - 1, Color(White), Color(White), Color(White), Visible To, Visible Always);
+	}
+}
+
+rule("Add last text (with expiration time) to global HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToGlobalNotifications;
+	}
+
+	actions
+	{
+		Modify Global Variable(hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Global Variable(hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Add last text (with expiration time) to player HUD notifications")
+{
+	event
+	{
+		Subroutine;
+		AddLastTextToPlayerNotifications;
+	}
+
+	actions
+	{
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+	}
+}
+
+rule("Remove expired global HUD notifications")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Count Of(Global.hud_notifications) > 0;
+	}
+
+	actions
+	{
+		While(Count Of(Global.hud_notifications));
+			If(Global.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Global.hud_notifications[1]);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
+
+rule("Remove expired player HUD notifications")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Count Of(Event Player.hud_notifications) > 0;
+	}
+
+	actions
+	{
+		While(Count Of(Event Player.hud_notifications));
+			If(Event Player.hud_notifications[0] > Total Time Elapsed);
+				Break;
+			End;
+			Destroy HUD Text(Event Player.hud_notifications[1]);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+		End;
+		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
+		Loop If Condition Is True;
+	}
+}
