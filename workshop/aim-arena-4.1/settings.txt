@@ -55,6 +55,11 @@ settings
 			}
 		}
 	}
+
+	workshop
+	{
+		Show damage dealt notifications: Off
+	}
 }
 
 variables
