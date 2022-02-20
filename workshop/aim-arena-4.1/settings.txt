@@ -145,7 +145,7 @@ rule("GLOBAL initialize")
 	}
 }
 
-rule("Fill Team 1 with bots")
+disabled rule("Fill Team 1 with bots")
 {
 	event
 	{
@@ -462,7 +462,6 @@ rule("BOT death")
 		Stop Holding Button(Event Player, Button(Ability 1));
 		Stop Holding Button(Event Player, Button(Ability 2));
 		Wait(Global.death_animation_time, Ignore Condition);
-		Teleport(Event Player, Vector(0, 0, 0));
 		If(Hero Of(Event Player) != Hero(Mercy) && Hero Of(Event Player) != Hero(Pharah));
 			If(Event Player.current_hero_deaths >= Global.bot_hero_death_threshold);
 				Start Forcing Player To Be Hero(Event Player, Random Value In Array(Event Player.bot_allowed_heroes));
