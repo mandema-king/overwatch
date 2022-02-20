@@ -330,10 +330,32 @@ rule("Global scoreboard")
 			Visible To and String, Color(Team 1), Visible Always);
 		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[0]), Vector(10, 15, 19.500), 2,
 			Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Critical hits: {0}", Player Hero Stat(Players In Slot(0, Team 1), Hero(
+			Cassidy), Critical Hits)), Vector(10, 12, 19.500), 2, Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Critical hit accuracy: {0}%", Round To Integer(Player Hero Stat(
+			Players In Slot(0, Team 1), Hero(Cassidy), Critical Hit Accuracy) * 100, Up)), Vector(10, 10, 19.500), 2, Do Not Clip,
+			Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Shots hit: {0}/{1}", Player Hero Stat(Players In Slot(0, Team 1), Hero(
+			Cassidy), Shots Hit), Player Hero Stat(Players In Slot(0, Team 1), Hero(Cassidy), Shots Fired)), Vector(10, 8, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 1), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Weapon accuracy: {0}%", Round To Integer(Player Hero Stat(
+			Players In Slot(0, Team 1), Hero(Cassidy), Weapon Accuracy) * 100, Up)), Vector(10, 6, 19.500), 2, Do Not Clip,
+			Visible To and String, Color(Team 1), Visible Always);
 		Create In-World Text(All Players(All Teams), String("{0} {1}", String("Team"), 2), Vector(-10, 18, 19.500), 2.500, Do Not Clip,
 			Visible To and String, Color(Team 2), Visible Always);
 		Create In-World Text(All Players(All Teams), Custom String("Rounds won: {0}", Global.rounds_won[1]), Vector(-10, 15, 19.500), 2,
 			Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Critical hits: {0}", Player Hero Stat(Players In Slot(0, Team 2), Hero(
+			Cassidy), Critical Hits)), Vector(-10, 12, 19.500), 2, Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Critical hit accuracy: {0}%", Round To Integer(Player Hero Stat(
+			Players In Slot(0, Team 2), Hero(Cassidy), Critical Hit Accuracy) * 100, Up)), Vector(-10, 10, 19.500), 2, Do Not Clip,
+			Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Shots hit: {0}/{1}", Player Hero Stat(Players In Slot(0, Team 2), Hero(
+			Cassidy), Shots Hit), Player Hero Stat(Players In Slot(0, Team 2), Hero(Cassidy), Shots Fired)), Vector(-10, 8, 19.500), 2,
+			Do Not Clip, Visible To and String, Color(Team 2), Visible Always);
+		Create In-World Text(All Players(All Teams), Custom String("Weapon accuracy: {0}%", Round To Integer(Player Hero Stat(
+			Players In Slot(0, Team 2), Hero(Cassidy), Weapon Accuracy) * 100, Up)), Vector(-10, 6, 19.500), 2, Do Not Clip,
+			Visible To and String, Color(Team 2), Visible Always);
 	}
 }
 
