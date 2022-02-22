@@ -56,19 +56,19 @@ variables
 		10: bot_passive_mode_enabled
 		11: bot_difficulty
 		12: bot_headshot_aim_probability
+		13: hud_notifications
 
 	player:
 		0: bot_targeted_enemy
 		1: primary_fire_cooldown
 		2: primary_fire_max_range
-		3: hud_notifications
 		4: bot_strafe_duration_max
 		5: bot_strafe_duration_min
 }
 
 subroutines
 {
-	0: AddLastTextToPlayerNotifications
+	0: AddLastTextToNotifications
 }
 
 rule("Workshop settings")
@@ -178,7 +178,6 @@ rule("Initialize player variables")
 			Event Player.bot_strafe_duration_max = Max(Event Player.bot_strafe_duration_max, Event Player.bot_strafe_duration_min + 1);
 		End;
 		Event Player.bot_targeted_enemy = Null;
-		Event Player.hud_notifications = Empty Array;
 	}
 }
 
@@ -254,7 +253,7 @@ rule("When bot has spawned, begin targeting enemy")
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is targeting a dead player ({2})", Hero Icon String(
 				Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy),
 				Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 			Event Player.bot_targeted_enemy = Null;
 			Event Player.bot_targeted_enemy = First Of(Filtered Array(Players in View Angle(Event Player, Opposite Team Of(Team Of(
 				Event Player)), 45), Array Contains(All Living Players(Opposite Team Of(Team Of(Event Player))), Current Array Element)));
@@ -263,7 +262,7 @@ rule("When bot has spawned, begin targeting enemy")
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(
 				Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 		End;
 		Wait(Global.targeting_interval, Ignore Condition);
 		Loop If Condition Is True;
@@ -290,13 +289,13 @@ rule("When bot takes damage, begin targeting attacker")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} took damage from {2}", Hero Icon String(Hero Of(
 			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Attacker), Left,
 			Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 		If(Event Player.bot_targeted_enemy != Attacker);
 			Event Player.bot_targeted_enemy = Attacker;
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is now targeting {2}", Hero Icon String(Hero Of(
 				Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 		End;
 	}
 }
@@ -323,21 +322,21 @@ rule("When bot has targeted enemy, start facing target")
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is aiming for headshot on {2}", Hero Icon String(
 				Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy),
 				Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 			Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Eye Position(Event Player.bot_targeted_enemy)),
 				Global.bot_turn_rate, To World, Direction and Turn Rate);
 		Else;
 			Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} is aiming for body shot on {2}", Hero Icon String(
 				Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy),
 				Left, Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 			Start Facing(Event Player, Direction Towards(Eye Position(Event Player), Event Player.bot_targeted_enemy + Up * (Eye Position(
 				Event Player.bot_targeted_enemy) / 2)), Global.bot_turn_rate, To World, Direction and Turn Rate);
 		End;
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} has started facing {2}", Hero Icon String(Hero Of(
 			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Event Player.bot_targeted_enemy), Left,
 			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 	}
 }
 
@@ -363,7 +362,7 @@ rule("When bot has no targeted enemy, stop facing target")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} has no targeted enemy", Hero Icon String(Hero Of(
 			Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order,
 			Color(White), Color(White), Color(White), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 	}
 }
 
@@ -413,7 +412,7 @@ rule("When bot kills targeted enemy, stop targeting")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} dealt final blow to targeted enemy ({2})",
 			Hero Icon String(Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1), Victim), Left,
 			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 		Event Player.bot_targeted_enemy = Null;
 	}
 }
@@ -437,7 +436,7 @@ rule("When bot dies, stop targeting")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} died", Hero Icon String(Hero Of(Event Player)), String(
 			"{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left, Global.hud_notifications_sort_order, Color(White), Color(
 			White), Color(White), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 		Event Player.bot_targeted_enemy = Null;
 	}
 }
@@ -466,7 +465,7 @@ rule("When bot sees no living enemies, reload weapon")
 		Create HUD Text(All Players(All Teams), Null, Null, Custom String("{0} {1} sees no enemies...reloading weapon", Hero Icon String(
 			Hero Of(Event Player)), String("{0} {1}", Custom String("Bot"), Slot Of(Event Player) + 1)), Left,
 			Global.hud_notifications_sort_order, Color(White), Color(White), Color(White), None, Visible Always);
-		Call Subroutine(AddLastTextToPlayerNotifications);
+		Call Subroutine(AddLastTextToNotifications);
 		Press Button(Event Player, Button(Reload));
 		Wait(1, Ignore Condition);
 		Loop If Condition Is True;
@@ -665,44 +664,42 @@ rule("HUD - notifications spacing")
 	}
 }
 
-rule("Add last text (with expiration time) to player HUD notifications")
+rule("Add last text (with expiration time) to HUD notifications")
 {
 	event
 	{
 		Subroutine;
-		AddLastTextToPlayerNotifications;
+		AddLastTextToNotifications;
 	}
 
 	actions
 	{
-		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
-		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+		Modify Global Variable(hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Global Variable(hud_notifications, Append To Array, Last Text ID);
 	}
 }
 
-rule("Remove expired player HUD notifications")
+rule("Remove expired HUD notifications")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
+		Ongoing - Global;
 	}
 
 	conditions
 	{
-		Count Of(Event Player.hud_notifications) > 0;
+		Count Of(Global.hud_notifications) > 0;
 	}
 
 	actions
 	{
-		While(Count Of(Event Player.hud_notifications));
-			If(Event Player.hud_notifications[0] > Total Time Elapsed);
+		While(Count Of(Global.hud_notifications));
+			If(Global.hud_notifications[0] > Total Time Elapsed);
 				Break;
 			End;
-			Destroy HUD Text(Event Player.hud_notifications[1]);
-			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
-			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+			Destroy HUD Text(Global.hud_notifications[1]);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
 		End;
 		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
 		Loop If Condition Is True;

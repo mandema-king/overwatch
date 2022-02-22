@@ -79,6 +79,7 @@ variables
 		11: show_damage_dealt_notifications
 		12: show_damage_taken_notifications
 		13: targeting_interval
+		14: hud_notifications
 
 	player:
 		0: bot_allowed_heroes
@@ -88,7 +89,6 @@ variables
 		4: current_hero_deaths
 		5: distance_to_targeted_enemy
 		6: help_text_ids
-		7: hud_notifications
 		8: last_targeted_enemy
 		9: primary_fire_falloff_range
 		10: primary_fire_max_range
@@ -96,7 +96,7 @@ variables
 
 subroutines
 {
-	0: AddLastTextToPlayerNotifications
+	0: AddLastTextToNotifications
 }
 
 rule("Workshop settings")
@@ -147,21 +147,6 @@ rule("GLOBAL initialize")
 		Global.hud_player_help_sort_order = 200;
 		Global.hud_player_info_sort_order = 100;
 		Global.bot_turn_rate = 400;
-	}
-}
-
-rule("PLAYER initialize")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	actions
-	{
-		Event Player.hud_notifications = Empty Array;
 	}
 }
 
@@ -1367,7 +1352,7 @@ rule("PLAYER dealt damage")
 				: String(""), Event Damage, Event Ability != Null ? String("({0})", Event Ability) : String("")), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
 				Visible To and String, Default Visibility);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 	}
 }
 
@@ -1387,7 +1372,7 @@ rule("PLAYER took damage")
 				Event Player) : Event Player, Event Was Critical Hit ? String("Critical") : String(""), Event Damage), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Event Was Critical Hit ? Color(Red) : Color(White),
 				Visible To and String, Default Visibility);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 	}
 }
 
@@ -1433,13 +1418,13 @@ rule("PLAYER toggle immortality")
 			Big Message(Event Player, Custom String("Immortality: off"));
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is no longer immortal", Event Player), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 		Else;
 			Set Status(Event Player, Null, Unkillable, 9999);
 			Big Message(Event Player, Custom String("Immortality: on"));
 			Create HUD Text(All Players(Team 1), Null, Null, Custom String("{0} is now immortal", Event Player), Left,
 				Global.hud_notifications_sort_order, Color(White), Color(White), Color(Yellow), Visible To and String, Default Visibility);
-			Call Subroutine(AddLastTextToPlayerNotifications);
+			Call Subroutine(AddLastTextToNotifications);
 	}
 }
 
@@ -1671,44 +1656,42 @@ rule("HUD - Team 2 scoreboard")
 	}
 }
 
-rule("Add last text (with expiration time) to player HUD notifications")
+rule("Add last text (with expiration time) to HUD notifications")
 {
 	event
 	{
 		Subroutine;
-		AddLastTextToPlayerNotifications;
+		AddLastTextToNotifications;
 	}
 
 	actions
 	{
-		Modify Player Variable(Event Player, hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
-		Modify Player Variable(Event Player, hud_notifications, Append To Array, Last Text ID);
+		Modify Global Variable(hud_notifications, Append To Array, Total Time Elapsed + Global.hud_notifications_duration);
+		Modify Global Variable(hud_notifications, Append To Array, Last Text ID);
 	}
 }
 
-rule("Remove expired player HUD notifications")
+rule("Remove expired HUD notifications")
 {
 	event
 	{
-		Ongoing - Each Player;
-		All;
-		All;
+		Ongoing - Global;
 	}
 
 	conditions
 	{
-		Count Of(Event Player.hud_notifications) > 0;
+		Count Of(Global.hud_notifications) > 0;
 	}
 
 	actions
 	{
-		While(Count Of(Event Player.hud_notifications));
-			If(Event Player.hud_notifications[0] > Total Time Elapsed);
+		While(Count Of(Global.hud_notifications));
+			If(Global.hud_notifications[0] > Total Time Elapsed);
 				Break;
 			End;
-			Destroy HUD Text(Event Player.hud_notifications[1]);
-			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
-			Modify Player Variable(Event Player, hud_notifications, Remove From Array By Index, 0);
+			Destroy HUD Text(Global.hud_notifications[1]);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
+			Modify Global Variable(hud_notifications, Remove From Array By Index, 0);
 		End;
 		Wait(Global.hud_notifications_duration / 5, Ignore Condition);
 		Loop If Condition Is True;
