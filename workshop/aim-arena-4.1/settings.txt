@@ -150,6 +150,21 @@ rule("GLOBAL initialize")
 	}
 }
 
+rule("PLAYER initialize")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	actions
+	{
+		Event Player.hud_notifications = Empty Array;
+	}
+}
+
 disabled rule("Fill Team 1 with bots")
 {
 	event
